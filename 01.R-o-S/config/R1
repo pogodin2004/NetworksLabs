@@ -1,0 +1,145 @@
+Building configuration...
+
+Current configuration : 1486 bytes
+!
+! Last configuration change at 20:52:12 UTC Fri Sep 2 2022
+! NVRAM config last updated at 20:52:18 UTC Fri Sep 2 2022
+!
+version 15.7
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$SVsk$Zr/aFVgZCFOPdf996GbMR0
+!
+no aaa new-model
+!
+!
+!
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!         
+!
+no ip domain lookup
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!         
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ no ip address
+ duplex auto
+!
+interface Ethernet0/0.3
+ description MANAGEMENT
+ encapsulation dot1Q 3
+ ip address 192.168.3.1 255.255.255.0
+!
+interface Ethernet0/0.4
+ description OPERATIONS
+ encapsulation dot1Q 4
+ ip address 192.168.4.1 255.255.255.0
+!         
+interface Ethernet0/0.8
+ description NATIVE
+ encapsulation dot1Q 8 native
+!
+interface Ethernet0/1
+ no ip address
+ shutdown
+ duplex auto
+!
+interface Ethernet0/2
+ no ip address
+ shutdown
+ duplex auto
+!
+interface Ethernet0/3
+ no ip address
+ shutdown
+ duplex auto
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+ipv6 ioam timestamp
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+banner motd ^CUnauthorized access is prohibited!^C
+!
+line con 0
+ password 7 13061E010803
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 02050D480809
+ login
+ transport input none
+!
+!
+end

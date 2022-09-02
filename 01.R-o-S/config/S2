@@ -1,0 +1,103 @@
+Current configuration : 1406 bytes
+!
+! Last configuration change at 20:32:56 UTC Fri Sep 2 2022
+! NVRAM config last updated at 20:37:11 UTC Fri Sep 2 2022
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+service compress-config
+!
+hostname S2
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable password 7 00071F071748
+!
+no aaa new-model
+!
+!
+!         
+!
+!
+!
+!
+!
+no ip domain-lookup
+ip cef
+no ipv6 cef
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!         
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ switchport trunk allowed vlan 3,4,8
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 8
+ switchport mode trunk
+!
+interface Ethernet0/1
+ switchport access vlan 4
+ switchport mode access
+!
+interface Ethernet0/2
+ switchport access vlan 7
+ switchport mode access
+ shutdown
+!
+interface Ethernet0/3
+ switchport access vlan 7
+ switchport mode access
+ shutdown
+!
+interface Vlan3
+ ip address 192.168.3.12 255.255.255.0
+!
+ip default-gateway 192.168.3.1
+ip forward-protocol nd
+!
+ip http server
+ip http secure-server
+!
+ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+!
+!
+!
+!
+!
+control-plane
+!
+banner motd ^CUnauthorized access is prohibited!^C
+!
+line con 0
+ password 7 030752180500
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 094F471A1A0A
+ login
+!
+!
+!
+end
