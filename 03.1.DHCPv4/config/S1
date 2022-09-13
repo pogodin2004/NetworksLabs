@@ -1,0 +1,102 @@
+Current configuration : 1385 bytes
+!
+! Last configuration change at 08:09:04 UTC Sat Sep 10 2022
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+service compress-config
+!
+hostname S1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$AgE2$zrg39sQpFqRXPssVSSI.r1
+!
+no aaa new-model
+!
+!
+!
+!         
+!
+!
+!
+!
+no ip domain-lookup
+ip cef
+no ipv6 cef
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!         
+!
+!
+!
+!
+interface Ethernet0/0
+ switchport trunk allowed vlan 100,200,1000
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 1000
+ switchport mode trunk
+!
+interface Ethernet0/1
+ switchport access vlan 100
+ switchport mode access
+!
+interface Ethernet0/2
+ switchport access vlan 999
+ switchport mode access
+ shutdown
+!
+interface Ethernet0/3
+ switchport access vlan 999
+ switchport mode access
+ shutdown 
+!
+interface Vlan200
+ ip address 192.168.1.66 255.255.255.224
+!
+ip default-gateway 192.168.1.65
+ip forward-protocol nd
+!
+ip http server
+ip http secure-server
+!
+ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+!
+!
+!
+!
+!
+control-plane
+!
+banner motd ^CUnauthorized access is prohibited!^C
+!
+line con 0
+ password 7 02050D480809
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 02050D480809
+ login
+!
+!
+!
+end
