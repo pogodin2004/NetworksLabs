@@ -226,16 +226,19 @@ VLAN
 
 VPC
 Чокурдах
+
 ![](img/vpc_30.png)
 
 ![](img/vpc_31.png)
 
 С.-Петербург
+
 ![](img/vpc_8.png)
 
 ![](img/vpc_8.png)
 
 Москва
+
 ![](img/vpc_1.png)
 
 ![](img/vpc_7.png)
