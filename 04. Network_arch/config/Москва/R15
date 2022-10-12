@@ -1,0 +1,135 @@
+version 15.7
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R15
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$J.3H$lGdgj3FgLyYggeB5K7qtS0
+!
+no aaa new-model
+!
+!
+!
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+ip cef    
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!         
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ description TO_R13
+ ip address 172.16.5.18 255.255.255.252
+ duplex auto
+ ipv6 address FE80::15 link-local
+ ipv6 address 2001:DF8:1000:F1::15/64
+!
+interface Ethernet0/1
+ description TO_R12
+ ip address 172.16.5.14 255.255.255.252
+ duplex auto
+ ipv6 address FE80::15 link-local
+ ipv6 address 2001:DF8:1000:B1::15/64
+!
+interface Ethernet0/2
+ description TO_R21
+ ip address 172.16.4.2 255.255.255.252
+ duplex auto
+ ipv6 address FE80::15 link-local
+ ipv6 address 2001:DF8:1000:A1::15/64
+!
+interface Ethernet0/3
+ description TO_R20
+ ip address 172.16.5.21 255.255.255.252
+ duplex auto
+ ipv6 address FE80::15 link-local
+ ipv6 address 2001:DF8:1000:C1::15/64
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+ipv6 ioam timestamp
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+banner motd ^CUnauthorized access is prohibited!^C
+!
+line con 0
+ password 7 045802150C2E
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 045802150C2E
+ login
+ transport input none
+!
+!
+end
+

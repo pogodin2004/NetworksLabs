@@ -1,0 +1,134 @@
+version 15.7
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R14
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$Zi3S$9dYiFPVjHPo3jxUCaFIMA/
+!
+no aaa new-model
+!
+!
+!
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+ip cef    
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!         
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ description TO_R12
+ ip address 172.16.5.1 255.255.255.252
+ duplex auto
+ ipv6 address FE80::14 link-local
+ ipv6 address 2001:DF8:1000:F1::14/64
+!
+interface Ethernet0/1
+ description TO_R13
+ ip address 172.16.5.9 255.255.255.252
+ duplex auto
+ ipv6 address FE80::14 link-local
+ ipv6 address 2001:DF8:1000:B1::14/64
+!
+interface Ethernet0/2
+ description TO_R22
+ ip address 172.16.2.2 255.255.255.252
+ duplex auto
+ ipv6 address FE80::14 link-local
+ ipv6 address 2001:DF8:1000:A1::14/64
+!
+interface Ethernet0/3
+ ip address 172.16.5.5 255.255.255.252
+ duplex auto
+ ipv6 address FE80::14 link-local
+ ipv6 address 2001:DF8:1000:C1::14/64
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+ipv6 ioam timestamp
+!
+!
+!
+control-plane
+!         
+!
+!
+!
+!
+!
+!
+banner motd ^CUnauthorized access is prohibited!^C
+!
+line con 0
+ password 7 060506324F41
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 094F471A1A0A
+ login
+ transport input none
+!
+!
+end
+

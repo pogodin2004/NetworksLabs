@@ -1,0 +1,127 @@
+version 15.7
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R27
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$nFAH$1HZvX1QfjB8G.I4BgjWte.
+!
+no aaa new-model
+!
+!
+!
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+ip cef    
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!         
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ ip address 172.16.1.1 255.255.255.252
+ duplex auto
+ ipv6 address FE80::27 link-local
+ ipv6 address 2001:DF8:1000:F1::27/64
+!
+interface Ethernet0/1
+ no ip address
+ shutdown
+ duplex auto
+!
+interface Ethernet0/2
+ no ip address
+ shutdown
+ duplex auto
+!         
+interface Ethernet0/3
+ no ip address
+ shutdown
+ duplex auto
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+ipv6 ioam timestamp
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!         
+banner motd ^CUnauthorized access is prohibited!^C
+!
+line con 0
+ password 7 104D000A0618
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 01100F175804
+ login
+ transport input none
+!
+!
+end

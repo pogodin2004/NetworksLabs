@@ -1,0 +1,114 @@
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+service compress-config
+!
+hostname SW9
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$VP/p$VY/Zt0o0FyEVfRz.QH.aL/
+!
+no aaa new-model
+!
+!
+!
+!         
+!
+!
+!
+!
+no ip domain-lookup
+ip cef
+no ipv6 cef
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!         
+!
+!
+!
+!
+interface Port-channel1
+ switchport trunk allowed vlan 50,51,80,100
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 50
+ switchport mode trunk
+!
+interface Ethernet0/0
+ switchport trunk allowed vlan 50,51,80,100
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 50
+ switchport mode trunk
+ channel-group 1 mode active
+!
+interface Ethernet0/1
+ switchport trunk allowed vlan 50,51,80,100
+ switchport trunk encapsulation dot1q
+ switchport trunk native vlan 50
+ switchport mode trunk
+ channel-group 1 mode active
+!
+interface Ethernet0/2
+ switchport access vlan 80
+ switchport mode access
+!
+interface Ethernet0/3
+!
+interface Ethernet1/0
+!
+interface Ethernet1/1
+!
+interface Ethernet1/2
+!
+interface Ethernet1/3
+!
+interface Vlan51
+ ip address 51.51.51.1 255.255.255.0
+!
+interface Vlan80
+ ip address 80.80.80.1 255.255.255.0
+!
+ip forward-protocol nd
+!         
+ip http server
+ip http secure-server
+!
+ip ssh server algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+ip ssh client algorithm encryption aes128-ctr aes192-ctr aes256-ctr
+!
+!
+!
+!
+!
+control-plane
+!
+banner motd ^CUnauthorized access is prohibited!^C
+!
+line con 0
+ password 7 060506324F41
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 070C285F4D06
+ login
+!         
+!
+!
+end
