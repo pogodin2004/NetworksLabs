@@ -80,13 +80,14 @@ exit
 
 ```
 route-map CHOKO permit 10
-match ip address FOR_NTWRK30
-set ip next-hop verify-availability 172.16.1.37 1 track 1
-exit
+ match ip address FOR_NTWRK30
+ set ip next-hop verify-availability 172.16.1.37 1 track 1
+ set ip next-hop verify-availability 172.16.1.13 2 track 2
+
 route-map CHOKO permit 20
-match ip address FOR_NTWRK31
-set ip next-hop verify-availability 172.16.1.13 2 track 2
-exit
+ match ip address FOR_NTWRK31
+ set ip next-hop verify-availability 172.16.1.13 1 track 2
+ set ip next-hop verify-availability 172.16.1.37 2 track 1
 ```
 
    Настроим для офиса Лабытнанги маршрут по-умолчанию
