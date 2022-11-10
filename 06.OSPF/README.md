@@ -278,7 +278,7 @@ R15(config-rtr)#area 102 filter-list prefix 101_V6_YOU_WILL_NOT_PASS in
 
 ### R19
 
-![](img/r19_neighs_v4_v6.png)
+![](img/r19_neigs_v4_v6.png)
 
 ![](img/r19_ro_v4.png)
 
@@ -286,7 +286,7 @@ R15(config-rtr)#area 102 filter-list prefix 101_V6_YOU_WILL_NOT_PASS in
 
 ### R12
 
-![](img/r12_neighs_v4_v6.png)
+![](img/r12_neigs_v4_v6.png)
 
 ![](img/r12_ro_v4.png)
 
