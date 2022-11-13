@@ -1,0 +1,143 @@
+Current configuration : 1596 bytes
+!
+! Last configuration change at 12:56:03 UTC Sun Nov 13 2022
+!
+version 15.7
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R23
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$v.vW$fjRfvY0k9y894S9v8vANB0
+!
+no aaa new-model
+!
+!
+!
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!         
+no ip domain lookup
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!         
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ description TO_R22
+ ip address 172.16.1.17 255.255.255.252
+ duplex auto
+ ipv6 address FE80::23 link-local
+ ipv6 address 2001:DF8:1000:F1::23/64
+!
+interface Ethernet0/1
+ description TO_R25
+ ip address 172.16.1.6 255.255.255.252
+ ip router isis 
+ duplex auto
+ ipv6 address FE80::23 link-local
+ ipv6 address 2001:DF8:1000:A1::23/64
+ ipv6 router isis 
+!
+interface Ethernet0/2
+ description TO_R24
+ ip address 172.16.1.21 255.255.255.252
+ ip router isis 
+ duplex auto
+ ipv6 address FE80::23 link-local
+ ipv6 address 2001:DF8:1000:B1::23/64
+ ipv6 router isis 
+!
+interface Ethernet0/3
+ no ip address
+ shutdown
+ duplex auto
+!
+router isis
+ net 49.2222.0023.0023.0023.00
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+ipv6 ioam timestamp
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+banner motd ^CUnauthorized access is prohibited!^C
+!
+line con 0
+ password 7 13061E010803
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 01100F175804
+ login
+ transport input none
+!
+!
+end
