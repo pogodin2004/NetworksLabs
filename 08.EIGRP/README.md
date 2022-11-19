@@ -133,9 +133,9 @@ R32(config-router)#addr ipv6 uni auto 1
 R32(config-router-af)#eigrp router-id 32.32.32.32 
 ```
 
-![](img/r32_neighbors.png)
+![](img/r32_reighbors.png)
 
-![](img/r32_ipv4_before.png)
+![](img/r32_ipb4_before.png)
 
 ![](img/r32_ipv6_before.png)
 
