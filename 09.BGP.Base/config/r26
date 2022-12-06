@@ -1,0 +1,160 @@
+Current configuration : 2060 bytes
+!
+! Last configuration change at 17:31:25 UTC Tue Dec 6 2022
+!
+version 15.7
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R26
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$.h5.$VAA41mTWSf80FUIpmYP5//
+!
+no aaa new-model
+!
+!
+!
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!         
+no ip domain lookup
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!         
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ description TO_R24
+ ip address 172.16.1.30 255.255.255.252
+ ip router isis 
+ duplex auto
+ ipv6 address FE80::26 link-local
+ ipv6 address 2001:DF8:1000:F1::26/64
+ ipv6 router isis 
+!
+interface Ethernet0/1
+ description TO_R28
+ ip address 172.16.1.37 255.255.255.252
+ duplex auto
+ ipv6 address FE80::26 link-local
+ ipv6 address 2001:DF8:1000:A1::26/64
+!
+interface Ethernet0/2
+ description TO_R25
+ ip address 172.16.1.10 255.255.255.252
+ ip router isis 
+ duplex auto
+ ipv6 address FE80::26 link-local
+ ipv6 address 2001:DF8:1000:B1::26/64
+ ipv6 router isis 
+!
+interface Ethernet0/3
+ description TO_R18
+ ip address 172.16.1.41 255.255.255.252
+ duplex auto
+ ipv6 address FE80::26 link-local
+ ipv6 address 2001:DF8:1000:C1::26/64
+!
+router isis
+ net 49.0026.0026.0026.0026.00
+!
+router bgp 520
+ bgp router-id 26.26.26.26
+ bgp log-neighbor-changes
+ neighbor 2001:DF8:1000:C1::18 remote-as 2042
+ neighbor 172.16.1.42 remote-as 2042
+ !
+ address-family ipv4
+  neighbor 2001:DF8:1000:C1::18 activate
+  neighbor 172.16.1.42 activate
+ exit-address-family
+ !
+ address-family ipv6
+  neighbor 2001:DF8:1000:C1::18 activate
+ exit-address-family
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+ipv6 ioam timestamp
+!
+!
+!         
+control-plane
+!
+!
+!
+!
+!
+!
+!
+banner motd ^CUnauthorized access is prohibited!^C
+!
+line con 0
+ password 7 104D000A0618
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 13061E010803
+ login
+ transport input none
+!
+!
+end
