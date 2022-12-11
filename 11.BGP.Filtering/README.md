@@ -1,200 +1,128 @@
 # Lab - BGP. Основы
 
 ## Цель:
-   Настроить iBGP в офисе Москва
+
+   Настроить фильтрацию для офиса Москва
    
-   Настроить iBGP в сети провайдера Триада
-   
-   Организовать полную IP связанность всех сетей
+   Настроить фильтрацию для офиса С.-Петербург
 
 ## Описание/Пошаговая инструкция выполнения домашнего задания:
 
-   1. Настроите iBGP в офисе Москва между маршрутизаторами R14 и R15.
+   1. Настроить фильтрацию в офисе Москва так, чтобы не появилось транзитного трафика(As-path).
    
-   2. Настроите iBGP в провайдере Триада, с использованием RR.
+   2. Настроить фильтрацию в офисе С.-Петербург так, чтобы не появилось транзитного трафика(Prefix-list).
    
-   3. Настройте офис Москва так, чтобы приоритетным провайдером стал Ламас.
+   3. Настроить провайдера Киторн так, чтобы в офис Москва отдавался только маршрут по умолчанию.
    
-   4. Настройте офис С.-Петербург так, чтобы трафик до любого офиса распределялся по двум линкам одновременно.
+   4. Настроить провайдер Ламас так, чтобы в офис Москва отдавался только маршрут по умолчанию и префикс офиса С.-Петербург.
    
    5. Все сети в лабораторной работе должны иметь IP связность.
 
-## Topology
-
-### Москва
-
-![](img/topology_msk.png)
-
-### Триада
-
-![](img/topology_trd.png)
-
 ## Настройка
 
-   1. Настроите iBGP в офисе Москва между маршрутизаторами R14 и R15.
+   1. Настроим фильтрацию в офисе Москва так, чтобы не появилось транзитного трафика(As-path)
+   
+   Т.к. приоритетный провайдер для Москвы - Ламас, то фильтрацию нужно делать на R15:
 
-   Так как на R14 и R15 уже настроен и OSPF и BGP, то просто добавим loopback интерфейсы и добавим необходимые правила в настройки протоколов маршрутизации:
+![](img/r15_r21_before.png)
 
-### R14
+![](img/r21_r15_before.png)
 
-```
-R14(config)#int lo0
-R14(config-if)#ip address 14.14.14.14 255.255.255.255
-R14(config-if)#ip ospf 1 area 0
-```
+   Транзитного трафика нет
 
 ```
-R14(config)#router bgp 1001
-R14(config-router)#neighbor 15.15.15.15 remote-as 1001
-R14(config-router)#neighbor 15.15.15.15 update-source lo0
-```
-
-![](img/r14_bgp_sum.png)
-
-### R15
-
-```
-R15(config)#int lo0
-R15(config-if)#ip addr 15.15.15.15 255.255.255.255
-R15(config-if)#ip ospf 1 area 0
-```
-
-```
+R15(config)#ip as-path access-list 1 permit ^$
+R15(config)#ip as-path access-list 1 deny .*  
 R15(config)#router bgp 1001
-R15(config-router)#neighbor 14.14.14.14 remote-as 1001
-R15(config-router)#neighbor 14.14.14.14 update-source lo0
+R15(config-router)#neighbor 172.16.4.1 filter-list 1 out
 ```
 
-![](img/r15_bgp_sum.png)
+![](img/r15_r21_after.png)
 
-   2. Настроите iBGP в провайдере Триада, с использованием RR.
+![](img/r21_r15_after.png)
 
-   Аналогичным образом поднимем loopback-интерфейсы и настроим iBGP.
+   На всякий случай повторим процедуру на R14
 
-### R23 - RR-Server
+![](img/r14_r22_before.png)
 
-```
-R23(config-if)#ip addr 23.23.23.23 255.255.255.255
-R23(config-if)#ip router isis
+![](img/r22_r14_before.png)
 
-R23(config)#router bgp 520
-R23(config-router)#bgp router-id interface Loopback0
-R23(config-router)#bgp log-neighbor-changes
-R23(config-router)#neighbor RR_TRD peer-group
-R23(config-router)#neighbor RR_TRD remote-as 520
-R23(config-router)#neighbor RR_TRD update-source lo0
-R23(config-router)#neighbor RR_TRD route-reflector-client
-R23(config-router)#neighbor 24.24.24.24 peer-group RR_TRD
-R23(config-router)#neighbor 25.25.25.25 peer-group RR_TRD
-R23(config-router)#neighbor 26.26.26.26 peer-group RR_TRD
-```
-
-![](img/r23_bgp_sum.png)
-
-### R24
-
-```
-R24(config)#int lo0
-R24(config-if)#ip addr 24.24.24.24 255.255.255.255
-R24(config-if)#ip router isis
-
-R24(config)#router bgp 520
-R24(config-router)#neighbor 23.23.23.23 remote-as 520
-R24(config-router)#neighbor 23.23.23.23 update-source lo0
-R24(config-router)#neighbor 23.23.23.23 next-hop-self    
-```
-
-![](img/r24_bgp_sum.png)
-
-### R25
-
-```
-R25(config)#int lo0
-R25(config-if)#ip addr 25.25.25.25
-R25(config-if)#ip router isis
-
-R25(config)#router bgp 520
-R25(config-router)#bgp router-id int lo0
-R25(config-router)#neighbor 23.23.23.23 remote-as 520
-R25(config-router)#neighbor 23.23.23.23 update-      
-R25(config-router)#neighbor 23.23.23.23 update-source lo0
-R25(config-router)#neighbor 23.23.23.23 next-hop-self    
-```
-
-![](img/r25_bgp_sum.png)
-
-### R26
-
-```
-R26(config)#int lo0
-R26(config-if)#ip addr 26.26.26.26 255.255.255.255
-R26(config-if)#ip router isis
-
-R26(config)#router bgp 520
-R26(config-router)#neighbor 23.23.23.23 remote-as 520
-R26(config-router)#neighbor 23.23.23.23 update-sourc 
-R26(config-router)#neighbor 23.23.23.23 update-source lo0
-R26(config-router)#neighbor 23.23.23.23 next-hop-self    
-```
-
-![](img/r26_bgp_sum.png)
-
-   3. Настройте офис Москва так, чтобы приоритетным провайдером стал Ламас.
-   
-   Трассировка с R14 до R18:
-
-![](img/r14_trace_before.png)
-   
-   Изменим Local Preference:
-
-```
-route-map LMS permit 10
-set local-preference 250
-route-map LMS deny 1000
-
-router bgp 1001
-neighbor 172.16.4.1 route-map LMS in
-neighbor 2001:DF8:1000:F1::21 route-map LMS in
-```
-
-   Трассировка с R14 до R18 после изменения:
-
-![](img/r14_trace_after.png)
-   
-   4. Настройте офис С.-Петербург так, чтобы трафик до любого офиса распределялся по двум линкам одновременно.
-   
-![](img/r18_ro_bgp_before.png)
    
 ```
+R14(config)#ip as-path access-list 1 permit ^$
+R14(config)#ip as-path access-list 1 deny .*  
+R14(config)#router bgp 1001
+R14(config-router)#neighbor 172.16.2.1 filter-list 1 out
+```
+
+   2. Настроим фильтрацию в офисе С.-Петербург так, чтобы не появилось транзитного трафика(Prefix-list):
+
+![](img/r18_r26_before.png)
+
+![](img/r18_r24_before.png)
+
+![](img/r26_r18_before.png)
+
+![](img/r24_r18_before.png)
+
+
+```
+R18(config)#ip prefix-list SPB seq 5 permit 172.16.6.0/24
 R18(config)#router bgp 2042
-R18(config-router)#maximum-paths 2
-R18(config-router)#bgp bestpath as-path multipath-relax
+R18(config-router)#neighbor 172.16.1.33 prefix-list SPB out
+R18(config-router)#neighbor 172.16.1.41 prefix-list SPB out
 ```
 
-![](img/r18_ro_bgp_after.png)
+![](img/r26_r18_after.png)
+
+![](img/r24_r18_after.png)
+
+
+   3. Настроим провайдера Киторн так, чтобы в офис Москва отдавался только маршрут по умолчанию:
+
+```
+R22(config)#ip prefix-list KTRN_DFLT deny 0.0.0.0/0
+R22(config)#router bgp 101
+R22(config-router)#neighbor 172.16.2.2 default-originate
+R22(config-router)#neighbor 172.16.2.2 prefix-list KTRN_DFLT out
+R22(config-router)#end
+```
+
+![](img/r14_r22_default.png)
+
+   4. Настроим провайдер Ламас так, чтобы в офис Москва отдавался только маршрут по умолчанию и префикс офиса С.-Петербург:
+   
+```
+R21(config)#ip prefix-list 1 seq 5 permit 172.16.6.0/24
+R21(config)#router bgp 301
+R21(config-router)#neighbor 172.16.4.2 default-originate
+R21(config-router)#neighbor 172.16.4.2 prefix-list 1 out
+```
+
+![](img/r15_r21_dflt.png)
 
    5. Все сети в лабораторной работе должны иметь IP связность.
 
 ### R14 - R22
 
-![](img/r14_r22.png)
+![](img/r14_r22_dflt.png)
 
 ### R14 - R21
 
-![](img/r14_r21.png)
+![](img/r14_r21_dflt.png)
 
 ### R14 - R23
 
-![](img/r14_r23.png)
+![](img/r14_r23_dflt.png)
 
 ### R14 - R18
 
-![](img/r14_r18.png)
+![](img/r14_r18_dflt.png)
 
 ### R14 - R27
 
-![](img/r14_r27.png)
-
+![](img/r14_r27_dflt.png)
+   
 ### R14 - R28
 
-![](img/r14_r28.png)
+![](img/r14_r28_dflt.png)
