@@ -1,4 +1,4 @@
-# Lab - BGP. Основы
+# Lab - BGP. Управление анонсами
 
 ## Цель:
 
@@ -43,7 +43,7 @@ R15(config-router)#neighbor 172.16.4.1 filter-list 1 out
 
    На всякий случай повторим процедуру на R14
 
-![](img/r14_r22_before.png)
+![](img/r14_r22_brfore.png)
 
 ![](img/r22_r14_before.png)
 
@@ -105,24 +105,24 @@ R21(config-router)#neighbor 172.16.4.2 prefix-list 1 out
 
 ### R14 - R22
 
-![](img/r14_r22_dflt.png)
+![](img/r14_r22.png)
 
 ### R14 - R21
 
-![](img/r14_r21_dflt.png)
+![](img/r14_r21.png)
 
 ### R14 - R23
 
-![](img/r14_r23_dflt.png)
+![](img/r14_r23.png)
 
 ### R14 - R18
 
-![](img/r14_r18_dflt.png)
+![](img/r14_r18.png)
 
 ### R14 - R27
 
-![](img/r14_r27_dflt.png)
+![](img/r14_r27.png)
    
 ### R14 - R28
 
-![](img/r14_r28_dflt.png)
+![](img/r14_r28.png)
