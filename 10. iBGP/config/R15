@@ -1,0 +1,201 @@
+Current configuration : 3049 bytes
+!
+version 15.7
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R15
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$J.3H$lGdgj3FgLyYggeB5K7qtS0
+!
+no aaa new-model
+!
+!
+!
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!
+no ip domain lookup
+ip cef    
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!         
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 15.15.15.15 255.255.255.255
+ ip ospf 1 area 0
+!
+interface Ethernet0/0
+ description TO_R13
+ ip address 172.16.5.18 255.255.255.252
+ ip ospf 1 area 10
+ duplex auto
+ ipv6 address FE80::15 link-local
+ ipv6 address 2001:DF8:1000:F1::15/64
+ ipv6 ospf 1 area 10
+!
+interface Ethernet0/1
+ description TO_R12
+ ip address 172.16.5.14 255.255.255.252
+ ip ospf 1 area 10
+ duplex auto
+ ipv6 address FE80::15 link-local
+ ipv6 address 2001:DF8:1000:B1::15/64
+ ipv6 ospf 1 area 10
+!
+interface Ethernet0/2
+ description TO_R21
+ ip address 172.16.4.2 255.255.255.252
+ duplex auto
+ ipv6 address FE80::15 link-local
+ ipv6 address 2001:DF8:1000:A1::15/64
+!
+interface Ethernet0/3
+ description TO_R20
+ ip address 172.16.5.21 255.255.255.252
+ ip ospf 1 area 102
+ duplex auto
+ ipv6 address FE80::15 link-local
+ ipv6 address 2001:DF8:1000:C1::15/64
+ ipv6 ospf 1 area 102
+!
+interface Ethernet1/0
+ description TO_R14
+ ip address 172.16.5.26 255.255.255.252
+ ip ospf 1 area 0
+ duplex auto
+ ipv6 address FE80::15 link-local
+ ipv6 address 2001:DF8:1000:D1::15/64
+ ipv6 ospf 1 area 0
+!
+interface Ethernet1/1
+ no ip address
+ shutdown
+ duplex auto
+!
+interface Ethernet1/2
+ no ip address
+ shutdown
+ duplex auto
+!
+interface Ethernet1/3
+ no ip address
+ shutdown
+ duplex auto
+!         
+router ospf 1
+ router-id 15.15.15.15
+ area 102 filter-list prefix 101_YOU_WILL_NOT_PASS in
+ default-information originate
+!
+router bgp 1001
+ bgp log-neighbor-changes
+ network 172.16.4.0 mask 255.255.255.252
+ network 172.16.5.24 mask 255.255.255.252
+ neighbor 14.14.14.14 remote-as 1001
+ neighbor 14.14.14.14 update-source Loopback0
+ neighbor 172.16.4.1 remote-as 301
+ neighbor 172.16.4.1 route-map LMS in
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+ip prefix-list 101_YOU_WILL_NOT_PASS seq 5 deny 172.16.5.4/30
+ip prefix-list 101_YOU_WILL_NOT_PASS seq 10 permit 0.0.0.0/0 le 32
+ipv6 route ::/0 2001:DF8:1000:F1::21
+ipv6 router ospf 1
+ router-id 15.15.15.15
+ area 102 filter-list prefix 101_V6_YOU_WILL_NOT_PASS in
+ default-information originate
+!
+ipv6 ioam timestamp
+!
+!
+ipv6 prefix-list 101_V6_YOU_WILL_NOT_PASS seq 5 deny 2001:DF8:1000:D1::/64
+ipv6 prefix-list 101_V6_YOU_WILL_NOT_PASS seq 10 permit ::/0 le 128
+route-map LMS permit 10
+ set local-preference 250
+!
+route-map LMS deny 1000
+!
+!
+!
+control-plane
+!
+!
+!
+!         
+!
+!
+!
+banner motd ^CUnauthorized access is prohibited!^C
+!
+line con 0
+ password 7 045802150C2E
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 045802150C2E
+ login
+ transport input none
+!
+!
+end
