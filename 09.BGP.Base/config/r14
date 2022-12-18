@@ -1,6 +1,6 @@
-Current configuration : 2701 bytes
+Current configuration : 3180 bytes
 !
-! Last configuration change at 17:56:25 UTC Tue Dec 6 2022
+! Last configuration change at 03:51:40 UTC Sun Dec 18 2022
 !
 version 15.7
 service timestamps debug datetime msec
@@ -76,6 +76,10 @@ redundancy
 !
 !
 !
+interface Loopback0
+ ip address 14.14.14.14 255.255.255.255
+ ip ospf 1 area 0
+!
 interface Ethernet0/0
  description TO_R12
  ip address 172.16.5.1 255.255.255.252
@@ -108,7 +112,7 @@ interface Ethernet0/3
  ipv6 address FE80::14 link-local
  ipv6 address 2001:DF8:1000:C1::14/64
  ipv6 ospf 1 area 101
-!
+!         
 interface Ethernet1/0
  description TO_R15
  ip address 172.16.5.25 255.255.255.252
@@ -141,33 +145,43 @@ router ospf 1
 router bgp 1001
  bgp router-id 14.14.14.14
  bgp log-neighbor-changes
+ neighbor 15.15.15.15 remote-as 1001
+ neighbor 15.15.15.15 update-source Loopback0
+ neighbor 2001:DF8:1000:D1::15 remote-as 1001
  neighbor 2001:DF8:1000:F1::22 remote-as 101
  neighbor 172.16.2.1 remote-as 101
  !
  address-family ipv4
-  neighbor 2001:DF8:1000:F1::22 activate
+  network 172.16.2.0 mask 255.255.255.252
+  network 172.16.5.24 mask 255.255.255.252
+  neighbor 15.15.15.15 activate
+  no neighbor 2001:DF8:1000:D1::15 activate
+  no neighbor 2001:DF8:1000:F1::22 activate
   neighbor 172.16.2.1 activate
+  neighbor 172.16.2.1 filter-list 1 out
  exit-address-family
  !
  address-family ipv6
+  network 2001:DF8:1000::/48
+  neighbor 2001:DF8:1000:D1::15 activate
   neighbor 2001:DF8:1000:F1::22 activate
  exit-address-family
 !
 ip forward-protocol nd
 !
+ip as-path access-list 1 permit ^$
+ip as-path access-list 1 deny .*
 !
 no ip http server
 no ip http secure-server
-ip route 0.0.0.0 0.0.0.0 172.16.2.1
 !
-ipv6 route ::/0 2001:DF8:1000:F1::22
 ipv6 router ospf 1
  router-id 14.14.14.14
  area 101 stub no-summary
  default-information originate
 !
 ipv6 ioam timestamp
-!
+!         
 !
 !
 control-plane
@@ -190,5 +204,6 @@ line vty 0 4
  login
  transport input none
 !
-!
+!         
 end
+

@@ -233,5 +233,31 @@ R21(config-router-af)#network 2001:df8:1000:b1::/64
 
 ![](img/r18_ping.png) 
 
+
+Доработка по замечаниям:
+
+### R14
+
+![](img/r14_bgp_conf.png)
+
+![](img/r14_bgp_ipv6.png) 
+
+### R22
+
+![](img/r22_bgp_conf.png)
+
+![](img/r22_bgp_ipv6.png)
+
+### R21
+
+![](img/r21_bgp_conf.png)
+
+![](img/r21_bgp_ipv6.png)
+
+### R15
+
+![](img/r15_bgp_conf.png)
+
+![](img/r15_bgp_ipv6.png)
    
 

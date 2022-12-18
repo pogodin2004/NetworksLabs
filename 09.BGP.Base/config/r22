@@ -1,6 +1,6 @@
-Current configuration : 2099 bytes
+Current configuration : 2495 bytes
 !
-! Last configuration change at 18:14:41 UTC Tue Dec 6 2022
+! Last configuration change at 04:00:01 UTC Sun Dec 18 2022
 !
 version 15.7
 service timestamps debug datetime msec
@@ -103,25 +103,33 @@ interface Ethernet0/3
  duplex auto
 !
 router bgp 101
- bgp router-id 22.22.22.22
  bgp log-neighbor-changes
  neighbor 2001:DF8:1000:A1::14 remote-as 1001
  neighbor 2001:DF8:1000:B1::21 remote-as 301
+ neighbor 2001:DF8:1000:F1::23 remote-as 520
+ neighbor 172.16.1.17 remote-as 520
  neighbor 172.16.2.2 remote-as 1001
  neighbor 172.16.3.2 remote-as 301
  !
  address-family ipv4
+  network 172.16.1.16 mask 255.255.255.252
   network 172.16.2.0 mask 255.255.255.252
-  neighbor 2001:DF8:1000:A1::14 activate
-  neighbor 2001:DF8:1000:B1::21 activate
+  network 172.16.3.0 mask 255.255.255.252
+  no neighbor 2001:DF8:1000:A1::14 activate
+  no neighbor 2001:DF8:1000:B1::21 activate
+  no neighbor 2001:DF8:1000:F1::23 activate
+  neighbor 172.16.1.17 activate
   neighbor 172.16.2.2 activate
+  neighbor 172.16.2.2 default-originate
+  neighbor 172.16.2.2 prefix-list KTRN_DFLT out
   neighbor 172.16.3.2 activate
  exit-address-family
  !
  address-family ipv6
-  network 2001:DF8:1000:A1::/64
+  network 2001:DF8:1000::/48
   neighbor 2001:DF8:1000:A1::14 activate
   neighbor 2001:DF8:1000:B1::21 activate
+  neighbor 2001:DF8:1000:F1::23 activate
  exit-address-family
 !
 ip forward-protocol nd
@@ -130,12 +138,14 @@ ip forward-protocol nd
 no ip http server
 no ip http secure-server
 !
+!
+ip prefix-list KTRN_DFLT seq 5 deny 0.0.0.0/0
 ipv6 ioam timestamp
 !
 !
 !
 control-plane
-!         
+!
 !
 !
 !
@@ -156,3 +166,4 @@ line vty 0 4
 !
 !
 end
+

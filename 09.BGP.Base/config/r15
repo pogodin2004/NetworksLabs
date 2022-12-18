@@ -1,6 +1,6 @@
-Current configuration : 3059 bytes
+Current configuration : 3636 bytes
 !
-! Last configuration change at 16:23:15 UTC Tue Dec 6 2022
+! Last configuration change at 04:27:56 UTC Sun Dec 18 2022
 !
 version 15.7
 service timestamps debug datetime msec
@@ -76,6 +76,10 @@ redundancy
 !
 !
 !
+interface Loopback0
+ ip address 15.15.15.15 255.255.255.255
+ ip ospf 1 area 0
+!
 interface Ethernet0/0
  description TO_R13
  ip address 172.16.5.18 255.255.255.252
@@ -131,7 +135,7 @@ interface Ethernet1/2
 !
 interface Ethernet1/3
  no ip address
- shutdown
+ shutdown 
  duplex auto
 !
 router ospf 1
@@ -140,26 +144,36 @@ router ospf 1
  default-information originate
 !
 router bgp 1001
- bgp router-id 15.15.15.15
  bgp log-neighbor-changes
+ neighbor 14.14.14.14 remote-as 1001
+ neighbor 14.14.14.14 update-source Loopback0
+ neighbor 2001:DF8:1000:D1::14 remote-as 1001
  neighbor 2001:DF8:1000:F1::21 remote-as 301
  neighbor 172.16.4.1 remote-as 301
  !
  address-family ipv4
-  neighbor 2001:DF8:1000:F1::21 activate
+  network 172.16.4.0 mask 255.255.255.252
+  network 172.16.5.24 mask 255.255.255.252
+  neighbor 14.14.14.14 activate
+  no neighbor 2001:DF8:1000:D1::14 activate
+  no neighbor 2001:DF8:1000:F1::21 activate
   neighbor 172.16.4.1 activate
+  neighbor 172.16.4.1 route-map LMS in
+  neighbor 172.16.4.1 filter-list 1 out
  exit-address-family
  !
  address-family ipv6
+  neighbor 2001:DF8:1000:D1::14 activate
   neighbor 2001:DF8:1000:F1::21 activate
  exit-address-family
 !
 ip forward-protocol nd
 !
+ip as-path access-list 1 permit ^$
+ip as-path access-list 1 deny .*
 !
 no ip http server
 no ip http secure-server
-ip route 0.0.0.0 0.0.0.0 172.16.4.1
 !
 !
 ip prefix-list 101_YOU_WILL_NOT_PASS seq 5 deny 172.16.5.4/30
@@ -175,13 +189,18 @@ ipv6 ioam timestamp
 !
 ipv6 prefix-list 101_V6_YOU_WILL_NOT_PASS seq 5 deny 2001:DF8:1000:D1::/64
 ipv6 prefix-list 101_V6_YOU_WILL_NOT_PASS seq 10 permit ::/0 le 128
+route-map LMS permit 10
+ set local-preference 250
+!
+route-map LMS deny 1000
+!
 !
 !
 control-plane
 !
 !
 !
-!         
+!
 !
 !
 !
@@ -199,3 +218,4 @@ line vty 0 4
 !
 !
 end
+

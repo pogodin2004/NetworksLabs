@@ -1,6 +1,6 @@
-Current configuration : 2253 bytes
+Current configuration : 2483 bytes
 !
-! Last configuration change at 18:21:43 UTC Tue Dec 6 2022
+! Last configuration change at 04:33:12 UTC Sun Dec 18 2022
 !
 version 15.7
 service timestamps debug datetime msec
@@ -113,19 +113,23 @@ router bgp 301
  neighbor 172.16.4.2 remote-as 1001
  !
  address-family ipv4
+  network 172.16.1.24 mask 255.255.255.252
+  network 172.16.3.0 mask 255.255.255.252
   network 172.16.4.0 mask 255.255.255.252
-  neighbor 2001:DF8:1000:A1::15 activate
-  neighbor 2001:DF8:1000:A1::22 activate
-  neighbor 2001:DF8:1000:F1::24 activate
+  no neighbor 2001:DF8:1000:A1::15 activate
+  no neighbor 2001:DF8:1000:A1::22 activate
+  no neighbor 2001:DF8:1000:F1::24 activate
   neighbor 172.16.1.25 activate
   neighbor 172.16.3.1 activate
   neighbor 172.16.4.2 activate
+  neighbor 172.16.4.2 default-originate
+  neighbor 172.16.4.2 prefix-list 1 out
  exit-address-family
  !
  address-family ipv6
-  network 2001:DF8:1000:A1::/64
   neighbor 2001:DF8:1000:A1::15 activate
   neighbor 2001:DF8:1000:A1::22 activate
+  neighbor 2001:DF8:1000:F1::24 activate
  exit-address-family
 !
 ip forward-protocol nd
@@ -134,8 +138,10 @@ ip forward-protocol nd
 no ip http server
 no ip http secure-server
 !
+!
+ip prefix-list 1 seq 5 permit 172.16.6.0/24
 ipv6 ioam timestamp
-!         
+!
 !
 !
 control-plane
@@ -158,6 +164,6 @@ line vty 0 4
  login
  transport input none
 !
-!         
+!
 end
 
