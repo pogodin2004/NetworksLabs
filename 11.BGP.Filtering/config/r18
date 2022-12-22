@@ -1,0 +1,202 @@
+Current configuration : 3173 bytes
+!
+! Last configuration change at 13:16:23 UTC Thu Dec 22 2022
+!
+version 15.7
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R18
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$vOFt$XKgnj.syITBYNe9229h7V.
+!
+no aaa new-model
+!
+!
+!
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!
+!         
+no ip domain lookup
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!
+!         
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 18.18.18.18 255.255.255.255
+!
+interface Ethernet0/0
+ description TO_R16
+ ip address 172.16.6.1 255.255.255.252
+ duplex auto
+ ipv6 address FE80::18 link-local
+ ipv6 address 2001:DF8:1000:F1::18/64
+!
+interface Ethernet0/1
+ description TO_R17
+ ip address 172.16.6.5 255.255.255.252
+ duplex auto
+ ipv6 address FE80::18 link-local
+ ipv6 address 2001:DF8:1000:A1::18/64
+!
+interface Ethernet0/2
+ description TO_R24
+ ip address 172.16.1.34 255.255.255.252
+ duplex auto
+ ipv6 address FE80::18 link-local
+ ipv6 address 2001:DF8:1000:B1::18/64
+!
+interface Ethernet0/3
+ description TO_R26
+ ip address 172.16.1.42 255.255.255.252
+ duplex auto
+ ipv6 address FE80::18 link-local
+ ipv6 address 2001:DF8:1000:C1::18/64
+!
+!
+router eigrp SPB
+ !
+ address-family ipv4 unicast autonomous-system 1
+  !
+  af-interface Ethernet0/2
+   passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet0/3
+   passive-interface
+  exit-af-interface
+  !
+  topology base
+   redistribute static
+  exit-af-topology
+  network 172.16.6.0 0.0.0.255
+  eigrp router-id 18.18.18.18
+ exit-address-family
+ !
+ address-family ipv6 unicast autonomous-system 1
+  !
+  af-interface Ethernet0/2
+   passive-interface
+  exit-af-interface
+  !
+  af-interface Ethernet0/3
+   passive-interface
+  exit-af-interface
+  !
+  topology base
+   redistribute static
+  exit-af-topology
+  eigrp router-id 18.18.18.18
+ exit-address-family
+!
+router bgp 2042
+ bgp log-neighbor-changes
+ bgp bestpath as-path multipath-relax
+ network 172.16.1.32 mask 255.255.255.252
+ network 172.16.1.40 mask 255.255.255.252
+ network 172.16.6.0 mask 255.255.255.0
+ network 172.16.6.4 mask 255.255.255.252
+ redistribute connected route-map RM-CONNECTED
+ neighbor 172.16.1.33 remote-as 520
+ neighbor 172.16.1.33 soft-reconfiguration inbound
+ neighbor 172.16.1.33 prefix-list SPB out
+ neighbor 172.16.1.41 remote-as 520
+ neighbor 172.16.1.41 soft-reconfiguration inbound
+ neighbor 172.16.1.41 prefix-list SPB out
+ maximum-paths 2
+!         
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip route 172.16.6.0 255.255.255.0 Null0
+!
+!
+ip prefix-list PL-CONNECTED seq 5 permit 172.16.1.0/26 le 32
+!
+ip prefix-list SPB seq 5 permit 172.16.6.0/24 le 32
+ip prefix-list SPB seq 10 permit 172.16.1.0/24 le 32
+ipv6 ioam timestamp
+!
+route-map RM-CONNECTED permit 10
+ match ip address prefix-list PL-CONNECTED
+!
+!
+!
+control-plane
+!
+!
+!         
+!
+!
+!
+!
+banner motd ^CUnauthorized access is prohibited!^C
+!
+line con 0
+ password 7 121A0C041104
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 0822455D0A16
+ login
+ transport input none
+!
+!
+end
