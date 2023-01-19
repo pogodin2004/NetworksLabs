@@ -1,0 +1,148 @@
+version 15.7
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R19
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$L9Zq$BOopg.pCqKnOuq.HEIacu/
+!
+no aaa new-model
+!
+!
+!
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!         
+!
+no ip domain lookup
+ip domain name network.lab
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+username pogodin secret 5 $1$DOIY$CecltQHjlyY/Mv8Yo0Ogm1
+!
+redundancy
+!
+!
+!         
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 19.19.19.19 255.255.255.255
+ ip ospf 1 area 101
+!
+interface Ethernet0/0
+ description TO_R14
+ ip address 172.16.5.6 255.255.255.252
+ ip ospf 1 area 101
+ duplex auto
+ ipv6 address FE80::19 link-local
+ ipv6 address 2001:DF8:1000:F1::19/64
+ ntp broadcast client
+ ipv6 ospf 1 area 101
+!
+interface Ethernet0/1
+ no ip address
+ shutdown
+ duplex auto
+!
+interface Ethernet0/2
+ no ip address
+ shutdown
+ duplex auto
+!
+interface Ethernet0/3
+ no ip address
+ shutdown
+ duplex auto
+!
+router ospf 1
+ router-id 19.19.19.19
+ area 101 stub
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip ssh version 2
+!
+ipv6 router ospf 1
+ router-id 19.19.19.19
+ area 101 stub
+!
+ipv6 ioam timestamp
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+banner motd ^CUnauthorized access is prohibited!^C
+!
+line con 0
+ password 7 1511021F0725
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 060506324F41
+ login local
+ transport input ssh
+!
+ntp update-calendar
+!
+end
+

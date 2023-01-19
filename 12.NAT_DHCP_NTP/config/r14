@@ -1,0 +1,231 @@
+version 15.7
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R14
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$Zi3S$9dYiFPVjHPo3jxUCaFIMA/
+!
+no aaa new-model
+!
+!
+!
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!
+!
+!         
+!
+no ip domain lookup
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+! 
+!
+!         
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 14.14.14.14 255.255.255.255
+ ip ospf 1 area 0
+!
+interface Loopback1
+ ip address 101.101.101.14 255.255.255.255
+!
+interface Ethernet0/0
+ description TO_R12
+ ip address 172.16.5.1 255.255.255.252
+ ip nat inside
+ ip virtual-reassembly in
+ ip ospf 1 area 10
+ duplex auto
+ ipv6 address FE80::14 link-local
+ ipv6 address 2001:DF8:1000:F1::14/64
+ ntp broadcast client
+ ipv6 ospf 1 area 10
+!
+interface Ethernet0/1
+ description TO_R13
+ ip address 172.16.5.9 255.255.255.252
+ ip nat inside
+ ip virtual-reassembly in
+ ip ospf 1 area 10
+ duplex auto
+ ipv6 address FE80::14 link-local
+ ipv6 address 2001:DF8:1000:B1::14/64
+ ntp broadcast client
+ ipv6 ospf 1 area 10
+!
+interface Ethernet0/2
+ description TO_R22
+ ip address 172.16.2.2 255.255.255.252
+ ip nat outside
+ ip virtual-reassembly in
+ duplex auto
+ ipv6 address FE80::14 link-local
+ ipv6 address 2001:DF8:1000:A1::14/64
+!
+interface Ethernet0/3
+ ip address 172.16.5.5 255.255.255.252
+ ip nat inside
+ ip virtual-reassembly in
+ ip ospf 1 area 101
+ duplex auto
+ ipv6 address FE80::14 link-local
+ ipv6 address 2001:DF8:1000:C1::14/64
+ ntp broadcast
+ ipv6 ospf 1 area 101
+!
+interface Ethernet1/0
+ description TO_R15
+ ip address 172.16.5.25 255.255.255.252
+ ip nat inside
+ ip virtual-reassembly in
+ ip ospf 1 area 0
+ duplex auto
+ ipv6 address FE80::14 link-local
+ ipv6 address 2001:DF8:1000:D1::14/64
+ ipv6 ospf 1 area 0
+!
+interface Ethernet1/1
+ no ip address
+ shutdown
+ duplex auto
+!
+interface Ethernet1/2
+ no ip address
+ shutdown
+ duplex auto
+!
+interface Ethernet1/3
+ no ip address
+ shutdown
+ duplex auto
+!
+router ospf 1
+ router-id 14.14.14.14
+ area 101 stub no-summary
+ default-information originate
+!         
+router bgp 1001
+ bgp router-id 14.14.14.14
+ bgp log-neighbor-changes
+ neighbor 15.15.15.15 remote-as 1001
+ neighbor 15.15.15.15 update-source Loopback0
+ neighbor 2001:DF8:1000:D1::15 remote-as 1001
+ neighbor 2001:DF8:1000:F1::22 remote-as 101
+ neighbor 172.16.2.1 remote-as 101
+ !
+ address-family ipv4
+  network 52.52.52.0 mask 255.255.255.0
+  network 101.101.101.14 mask 255.255.255.255
+  network 172.16.2.0 mask 255.255.255.252
+  network 172.16.5.24 mask 255.255.255.252
+  neighbor 15.15.15.15 activate
+  neighbor 15.15.15.15 next-hop-self
+  neighbor 15.15.15.15 soft-reconfiguration inbound
+  no neighbor 2001:DF8:1000:D1::15 activate
+  no neighbor 2001:DF8:1000:F1::22 activate
+  neighbor 172.16.2.1 activate
+  neighbor 172.16.2.1 soft-reconfiguration inbound
+  neighbor 172.16.2.1 filter-list 1 out
+ exit-address-family
+ !
+ address-family ipv6
+  network 2001:DF8:1000::/48
+  neighbor 2001:DF8:1000:D1::15 activate
+  neighbor 2001:DF8:1000:F1::22 activate
+ exit-address-family
+!
+ip forward-protocol nd
+!
+ip as-path access-list 1 permit ^$
+ip as-path access-list 1 deny .*
+!
+no ip http server
+no ip http secure-server
+ip nat inside source list 1 interface Loopback1 overload
+ip nat inside source static tcp 19.19.19.19 22 101.101.101.14 22 extendable
+!
+ipv6 router ospf 1
+ router-id 14.14.14.14
+ area 101 stub no-summary
+ default-information originate
+!
+ipv6 ioam timestamp
+!
+!
+access-list 1 permit 10.10.10.0 0.0.0.255
+access-list 1 permit 70.70.70.0 0.0.0.255
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+banner motd ^CUnauthorized access is prohibited!^C
+!
+line con 0
+ password 7 060506324F41
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 094F471A1A0A
+ login    
+ transport input none
+!
+ntp master 2
+ntp update-calendar
+!
+end

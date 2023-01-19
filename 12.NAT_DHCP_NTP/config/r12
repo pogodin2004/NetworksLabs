@@ -1,0 +1,171 @@
+version 15.7
+service timestamps debug datetime msec
+service timestamps log datetime msec
+service password-encryption
+!
+hostname R12
+!
+boot-start-marker
+boot-end-marker
+!
+!
+enable secret 5 $1$9x.J$QoPGLH9rBqrdpRMYL9nyH.
+!
+no aaa new-model
+!
+!
+!
+clock timezone MSK 3 0
+clock calendar-valid
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+
+!         
+ip dhcp excluded-address 10.10.10.1 10.10.10.15
+!
+ip dhcp pool POOL_FOR_VPC1
+ network 10.10.10.0 255.255.255.0
+ default-router 10.10.10.1 
+!
+!
+!
+no ip domain lookup
+ip cef
+ipv6 unicast-routing
+ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!         
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Ethernet0/0
+ no ip address
+ duplex auto
+!
+interface Ethernet0/0.10
+ description FOR_VPC1
+ encapsulation dot1Q 10
+ ip address 10.10.10.1 255.255.255.0
+ ip ospf 1 area 10
+!
+interface Ethernet0/0.50
+ shutdown
+!
+interface Ethernet0/0.52
+ description MGMT
+ encapsulation dot1Q 52
+ ip address 52.52.52.1 255.255.255.0
+ ip ospf 1 area 10
+!
+interface Ethernet0/0.70
+ description FOR_VPC7
+ encapsulation dot1Q 70
+ ip address 70.70.70.1 255.255.255.0
+ ip ospf 1 area 10
+!
+interface Ethernet0/1
+ no ip address
+ duplex auto
+ ntp broadcast
+!
+interface Ethernet0/2
+ description TO_R14
+ ip address 172.16.5.2 255.255.255.252
+ ip ospf 1 area 10
+ duplex auto
+ ipv6 address FE80::12 link-local
+ ipv6 address 2001:DF8:1000:F1::12/64
+ ntp broadcast
+ ipv6 ospf 1 area 10
+!
+interface Ethernet0/3
+ description TO_R15
+ ip address 172.16.5.13 255.255.255.252
+ ip ospf 1 area 10
+ duplex auto
+ ipv6 address FE80::12 link-local
+ ipv6 address 2001:DF8:1000:B1::12/64
+ ntp broadcast
+ ipv6 ospf 1 area 10
+!
+router ospf 1
+ router-id 12.12.12.12
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+ipv6 router ospf 1
+ router-id 12.12.12.12
+!
+ipv6 ioam timestamp
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+banner motd ^CUnauthorized access is prohibited!^C
+!
+line con 0
+ password 7 030752180500
+ logging synchronous
+ login
+line aux 0
+line vty 0 4
+ password 7 110A1016141D
+ login
+ transport input none
+!
+ntp master 1
+ntp update-calendar
+!
+end
