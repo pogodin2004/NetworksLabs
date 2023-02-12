@@ -83,6 +83,12 @@ R18(config)#ip route 30.30.30.0 255.255.255.0 tunnel 1 10
 R18(config)#ip route 31.31.31.0 255.255.255.0 tunnel 1 10
 ```
 
+![](img/gre_r14.png)
+
+![](img/gre_r15.png)
+
+![](img/gre_r18.png)
+
    2. DMVPN MSK - Лабытнаги - Чокурдах
 
 ### R15
@@ -126,8 +132,8 @@ R27(config)#int tun 1
 R27(config-if)#ip addr 10.200.10.2 255.255.255.0
 R27(config-if)#ip mtu 1400
 R27(config-if)#ip tcp adjust-mss 1360
-R27(config-if)#ip nhrp map 10.200.10.1 172.16.4.2 
-R27(config-if)#ip nhrp map multicast 172.16.4.2 
+R27(config-if)#ip nhrp map 10.200.10.1 201.201.201.15
+R27(config-if)#ip nhrp map multicast 201.201.201.15 
 R27(config-if)#ip nhrp network-id 1
 R27(config-if)#ip nhrp nhs 10.200.10.1
 R27(config-if)#ip nhrp short
@@ -167,3 +173,10 @@ R28(config-if)#ip nhrp map mult 201.201.201.14
 R28(config-if)#ip nhrp nhs 10.200.10.4
 ```
 
+![](img/dmvpn_r14.png)
+
+![](img/dmvpn_r15.png)
+
+![](img/dmvpn_r27.png)
+
+![](img/dmvpn_r28.png)
