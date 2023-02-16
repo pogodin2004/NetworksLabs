@@ -180,3 +180,139 @@ R28(config-if)#ip nhrp nhs 10.200.10.4
 ![](img/dmvpn_r27.png)
 
 ![](img/dmvpn_r28.png)
+
+
+# UPDATE
+
+### R14
+
+```
+interface Loopback2
+ ip address 201.201.201.14 255.255.255.255
+!
+interface Tunnel1
+ ip address 10.100.10.5 255.255.255.252
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ tunnel source 201.201.201.14
+ tunnel destination 201.201.201.18
+!
+interface Tunnel2
+ ip address 10.200.10.4 255.255.255.0
+ no ip redirects
+ ip mtu 1400
+ ip nhrp network-id 1
+ ip nhrp redirect
+ ip tcp adjust-mss 1360
+ ip ospf network point-to-multipoint
+ ip ospf 1 area 0
+ tunnel source Loopback2
+ tunnel mode gre multipoint
+```
+
+![](img/r14_nhrp.png)
+
+![](img/r14_ping_em_all.png)
+
+### R15
+
+```
+interface Loopback2
+ ip address 201.201.201.15 255.255.255.255
+!
+interface Tunnel0
+ ip address 10.100.10.1 255.255.255.252
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ tunnel source 201.201.201.15
+ tunnel destination 201.201.201.18
+!
+interface Tunnel1
+ ip address 10.200.10.1 255.255.255.0
+ no ip redirects
+ ip mtu 1400
+ ip nhrp network-id 1
+ ip nhrp redirect
+ ip tcp adjust-mss 1360
+ ip ospf network point-to-multipoint
+ ip ospf 1 area 0
+ tunnel source 172.16.4.2
+ tunnel mode gre multipoint
+```
+
+![](img/r15_nhrp.png)
+
+![](img/r15_ping_em_all.png)
+
+### R18
+
+```
+interface Loopback0
+ ip address 18.18.18.18 255.255.255.255
+!
+interface Loopback2
+ ip address 201.201.201.18 255.255.255.255
+!
+interface Tunnel0
+ ip address 10.100.10.2 255.255.255.252
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ tunnel source 201.201.201.18
+ tunnel destination 201.201.201.18
+!
+interface Tunnel1
+ ip address 10.100.10.6 255.255.255.252
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ tunnel source 201.201.201.18
+ tunnel destination 201.201.201.14
+```
+
+![](img/r18_ping_em_all.png)
+
+### R27
+
+```
+interface Tunnel1
+ ip address 10.200.10.2 255.255.255.0
+ no ip redirects
+ ip mtu 1400
+ ip nhrp map 10.200.10.1 172.16.4.2
+ ip nhrp map multicast 172.16.4.2
+ ip nhrp map 10.200.10.4 201.201.201.14
+ ip nhrp map multicast 201.201.201.14
+ ip nhrp network-id 1
+ ip nhrp nhs 10.200.10.1
+ ip nhrp nhs 10.200.10.4
+ ip tcp adjust-mss 1360
+ tunnel source 172.16.1.1
+ tunnel mode gre multipoint
+```
+
+![](img/r27_nhrp.png)
+
+![](img/r27_ping_em_all.png)
+
+### R28
+
+```
+interface Tunnel1
+ ip address 10.200.10.3 255.255.255.0
+ no ip redirects
+ ip mtu 1400
+ ip nhrp map multicast 172.16.4.2
+ ip nhrp map 10.200.10.4 201.201.201.14
+ ip nhrp map multicast 201.201.201.14
+ ip nhrp map 10.200.10.1 172.16.4.2
+ ip nhrp network-id 1
+ ip nhrp nhs 10.200.10.4
+ ip nhrp nhs 10.200.10.1
+ ip tcp adjust-mss 1360
+ tunnel source 172.16.1.38
+ tunnel mode gre multipoint
+```
+
+![](img/r28_nhrp.png)
+
+![](img/r28_ping_em_all.png)
+
