@@ -1,0 +1,26 @@
+---
+
+loopback:
+  address: 141.141.141.141
+  mask: 255.255.255.255
+  
+interfaces:
+  0/1:
+    alias: TO_MSK-R
+    address: 192.168.141.9
+    mask: 255.255.255.252
+
+  0/2:
+    alias: TO_KRD-R1
+    address: 192.168.141.18
+    mask: 255.255.255.252
+    
+  0/3:
+    alias: TO_RSTV-R1
+    address: 192.168.141.22
+    mask: 255.255.255.252
+    
+  1/0:
+    alias: TO_RSTV-R1
+    address: 192.168.141.26
+    mask: 255.255.255.252

@@ -1,0 +1,24 @@
+---
+
+- name: Create interfaces
+  hosts: all
+
+  tasks:      
+    - name: Create interfaces
+      cisco.ios.ios_config:
+        src: templates/interfaces.j2
+      
+    - name: enable interfaces
+      cisco.ios.ios_config:
+        parents: "interface Ethernet{{ item.0 }}"
+        lines: "no shutdown"
+      with_items:
+        - "{{ interfaces.items() }}"
+
+- name: Write memory
+  hosts: all
+
+  tasks:
+    - name: Write memory
+      cisco.ios.ios_command:
+        commands: "write memory"

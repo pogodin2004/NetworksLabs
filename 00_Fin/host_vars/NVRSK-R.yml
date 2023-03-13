@@ -1,0 +1,11 @@
+---
+
+loopback:
+  address: 124.124.124.124
+  mask: 255.255.255.255
+
+interfaces:
+  0/1:
+    alias: TO_KRD-R1
+    address: 192.168.121.17
+    mask: 255.255.255.252

@@ -1,0 +1,11 @@
+---
+
+loopback:
+  address: 132.132.132.132
+  mask: 255.255.255.255
+
+interfaces:
+  0/1:
+    alias: TO_RSTV-R1
+    address: 192.168.131.13
+    mask: 255.255.255.252

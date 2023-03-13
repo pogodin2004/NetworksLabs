@@ -1,0 +1,31 @@
+---
+
+loopback:
+  address: 131.131.131.131
+  mask: 255.255.255.255
+
+interfaces:
+  0/1:
+    alias: TO_REG-ISP1
+    address: 192.168.141.21
+    mask: 255.255.255.252
+
+  0/2:
+    alias: TO_REG-ISP2
+    address: 192.168.141.33
+    mask: 255.255.255.252
+    
+  0/3:
+    alias: TO_AZOV-R
+    address: 192.168.131.10
+    mask: 255.255.255.252
+    
+  1/0:
+    alias: TO_TAGANROG-R
+    address: 192.168.131.14
+    mask: 255.255.255.252
+
+  1/1:
+    alias: TO_NVCHRKSK-R
+    address: 192.168.131.18
+    mask: 255.255.255.252
