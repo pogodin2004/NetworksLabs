@@ -7,5 +7,14 @@ loopback:
 interfaces:
   0/1:
     alias: TO_KRD-R1
-    address: 192.168.121.13
+    address: 10.10.121.13
     mask: 255.255.255.252
+
+bgp:
+  asn: 101
+  neighbor:
+    - {address: 10.10.121.14, remote_as: 101}
+
+  networks:
+    - {network: 10.10.121.12, mask: 255.255.255.252}
+    - {network: 123.123.123.123, mask: 255.255.255.255}    

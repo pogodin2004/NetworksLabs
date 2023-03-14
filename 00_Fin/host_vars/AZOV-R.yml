@@ -7,5 +7,15 @@ loopback:
 interfaces:
   0/1:
     alias: TO_RSTV-R1
-    address: 192.168.131.9
+    address: 10.10.131.9
     mask: 255.255.255.252
+
+bgp:
+  asn: 201
+  neighbor:
+    - {address: 10.10.131.10, remote_as: 201}
+
+  networks:
+    - {network: 10.10.131.8, mask: 255.255.255.252}
+    - {network: 132.132.132.132, mask: 255.255.255.255}
+

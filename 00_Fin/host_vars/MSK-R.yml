@@ -7,20 +7,35 @@ loopback:
 interfaces:
   0/1:
     alias: TO_ISP2
-    address: 192.168.111.10
+    address: 10.10.111.10
     mask: 255.255.255.252
 
   0/2:
     alias: TO_ISP1
-    address: 192.168.111.14
+    address: 10.10.111.14
     mask: 255.255.255.252
 
   0/3:
     alias: TO_REG-ISP1
-    address: 192.168.141.10
+    address: 10.10.141.10
     mask: 255.255.255.252
 
   1/0:
     alias: TO_REG-ISP2
-    address: 192.168.141.14
+    address: 10.10.141.14
     mask: 255.255.255.252
+
+bgp:
+  asn: 1001
+  neighbor:
+    - {address: 10.10.111.9, remote_as: 1001}
+    - {address: 10.10.111.13, remote_as: 1001}
+    - {address: 10.10.141.9, remote_as: 301}
+    - {address: 10.10.141.13, remote_as: 301}
+  networks:
+    - {network: 10.10.111.8, mask: 255.255.255.252}
+    - {network: 10.10.111.12, mask: 255.255.255.252}
+    - {network: 10.10.141.8, mask: 255.255.255.252}
+    - {network: 10.10.141.12, mask: 255.255.255.252}
+    - {network: 111.111.111.111, mask: 255.255.255.255}
+  maxpath: 2

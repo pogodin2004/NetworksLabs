@@ -7,10 +7,21 @@ loopback:
 interfaces:
   0/1:
     alias: TO_ISP1
-    address: 192.168.111.17
+    address: 10.10.111.17
     mask: 255.255.255.252
 
   0/2:
     alias: TO_ISP2
-    address: 192.168.111.25
+    address: 10.10.111.25
     mask: 255.255.255.252
+
+bgp:
+  asn: 1001
+  neighbor:
+    - {address: 10.10.111.18, remote_as: 1001}
+    - {address: 10.10.111.26, remote_as: 1001}
+  networks:
+    - {network: 10.10.111.16, mask: 255.255.255.252}
+    - {network: 10.10.111.24, mask: 255.255.255.252}
+    - {network: 114.114.114.114, mask: 255.255.255.255}
+

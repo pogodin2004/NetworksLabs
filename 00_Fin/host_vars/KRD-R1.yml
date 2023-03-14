@@ -7,25 +7,42 @@ loopback:
 interfaces:
   0/1:
     alias: TO_REG-ISP1
-    address: 192.168.141.17
+    address: 10.10.141.17
     mask: 255.255.255.252
 
   0/2:
     alias: TO_REG-ISP2
-    address: 192.168.141.29
+    address: 10.10.141.29
     mask: 255.255.255.252
     
   0/3:
     alias: TO_ANAPA-R
-    address: 192.168.121.10
+    address: 10.10.121.10
     mask: 255.255.255.252
     
   1/0:
     alias: TO_SOCHI-R
-    address: 192.168.121.14
+    address: 10.10.121.14
     mask: 255.255.255.252
 
   1/1:
     alias: TO_NVRSK-R
-    address: 192.168.121.18
+    address: 10.10.121.18
     mask: 255.255.255.252
+    
+bgp:
+  asn: 101
+  neighbor:
+    - {address: 10.10.141.18, remote_as: 301}
+    - {address: 10.10.141.30, remote_as: 301}
+    - {address: 10.10.121.9, remote_as: 101}
+    - {address: 10.10.121.13, remote_as: 101}
+    - {address: 10.10.121.17, remote_as: 101}            
+  networks:
+    - {network: 10.10.141.16, mask: 255.255.255.252}
+    - {network: 10.10.141.28, mask: 255.255.255.252}
+    - {network: 10.10.121.8, mask: 255.255.255.252}
+    - {network: 10.10.121.12, mask: 255.255.255.252}
+    - {network: 10.10.121.16, mask: 255.255.255.252}                            
+    - {network: 121.121.121.121, mask: 255.255.255.255}
+  maxpath: 2

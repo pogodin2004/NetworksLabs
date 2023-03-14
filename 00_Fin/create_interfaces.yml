@@ -1,7 +1,7 @@
 ---
 
 - name: Create interfaces
-  hosts: all
+  hosts: all_devices
 
   tasks:      
     - name: Create interfaces
@@ -15,8 +15,16 @@
       with_items:
         - "{{ interfaces.items() }}"
 
+- name: Create bgp
+  hosts: all_devices
+
+  tasks:      
+    - name: Create bgp
+      cisco.ios.ios_config:
+        src: templates/bgp.j2
+
 - name: Write memory
-  hosts: all
+  hosts: all_devices
 
   tasks:
     - name: Write memory

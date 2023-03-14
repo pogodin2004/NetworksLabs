@@ -7,20 +7,36 @@ loopback:
 interfaces:
   0/1:
     alias: TO_MSK-R
-    address: 192.168.141.9
+    address: 10.10.141.9
     mask: 255.255.255.252
 
   0/2:
     alias: TO_KRD-R1
-    address: 192.168.141.18
+    address: 10.10.141.18
     mask: 255.255.255.252
     
   0/3:
     alias: TO_RSTV-R1
-    address: 192.168.141.22
+    address: 10.10.141.22
     mask: 255.255.255.252
     
   1/0:
     alias: TO_RSTV-R1
-    address: 192.168.141.26
+    address: 10.10.141.26
     mask: 255.255.255.252
+    
+bgp:
+  asn: 301
+  neighbor:
+    - {address: 10.10.141.17, remote_as: 101}
+    - {address: 10.10.141.21, remote_as: 201}
+    - {address: 10.10.141.25, remote_as: 301}
+    - {address: 10.10.141.10, remote_as: 1001}
+
+  networks:
+    - {network: 10.10.141.8, mask: 255.255.255.252}
+    - {network: 10.10.141.20, mask: 255.255.255.252}
+    - {network: 10.10.141.16, mask: 255.255.255.252}
+    - {network: 10.10.141.24, mask: 255.255.255.252}
+    - {network: 141.141.141.141, mask: 255.255.255.255}
+    
