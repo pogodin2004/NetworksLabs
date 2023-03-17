@@ -9,6 +9,14 @@ interfaces:
     alias: TO_KRD-R1
     address: 10.10.121.13
     mask: 255.255.255.252
+    
+subinterface:
+  0/2:
+    vlan: 20
+    alias: USERS
+    address: 172.18.20.1
+    mask: 255.255.255.0
+    dot1q: 20
 
 bgp:
   asn: 101
@@ -17,4 +25,5 @@ bgp:
 
   networks:
     - {network: 10.10.121.12, mask: 255.255.255.252}
+    - {network: 172.18.20.0, mask: 255.255.255.0}    
     - {network: 123.123.123.123, mask: 255.255.255.255}    

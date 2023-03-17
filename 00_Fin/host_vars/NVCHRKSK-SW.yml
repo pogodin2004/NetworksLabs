@@ -1,0 +1,20 @@
+---
+
+config:
+  vlans:
+    vlan:
+      - name: "USERS"
+        vlan_id: "60"
+  interfaces:
+    access:
+      - name: Ethernet0/2
+        alias: "USERS"
+        interface_mode: access
+        vlan:
+          members: "60"
+    trunk:
+      - name: Ethernet0/1
+        alias: "TO_NVCHRKSK-R"
+        interface_mode: trunk
+        allowed_vlans:
+          members: 60

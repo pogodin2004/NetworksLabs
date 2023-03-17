@@ -14,6 +14,14 @@ interfaces:
     alias: TO_ISP2
     address: 10.10.111.25
     mask: 255.255.255.252
+    
+subinterface:
+  0/3:
+    vlan: 100
+    alias: USERS
+    address: 172.18.100.1
+    mask: 255.255.255.0
+    dot1q: 100    
 
 bgp:
   asn: 1001
@@ -23,5 +31,6 @@ bgp:
   networks:
     - {network: 10.10.111.16, mask: 255.255.255.252}
     - {network: 10.10.111.24, mask: 255.255.255.252}
+    - {network: 172.18.100.0, mask: 255.255.255.0}        
     - {network: 114.114.114.114, mask: 255.255.255.255}
 

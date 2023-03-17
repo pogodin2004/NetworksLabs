@@ -1,13 +1,13 @@
 ---
 
 - name: Create interfaces
-  hosts: all_devices
+  hosts: all_routers
 
   tasks:      
     - name: Create interfaces
       cisco.ios.ios_config:
         src: templates/interfaces.j2
-      
+        
     - name: enable interfaces
       cisco.ios.ios_config:
         parents: "interface Ethernet{{ item.0 }}"
@@ -16,17 +16,40 @@
         - "{{ interfaces.items() }}"
 
 - name: Create bgp
-  hosts: all_devices
+  hosts: all_routers
 
   tasks:      
     - name: Create bgp
       cisco.ios.ios_config:
         src: templates/bgp.j2
 
-- name: Write memory
-  hosts: all_devices
+- name: Create vlans
+  hosts: all_switches
 
-  tasks:
-    - name: Write memory
-      cisco.ios.ios_command:
-        commands: "write memory"
+  tasks:      
+    - name: Create vlans
+      cisco.ios.ios_config:
+        src: templates/vlans.j2
+
+- name: Create LAGP
+  hosts: mscw_switches
+
+  tasks:      
+    - name: Set link aggregation group to members
+      cisco.ios.ios_lag_interfaces:
+        config:
+        - name: Port-channel1
+          members:
+          - member: Ethernet0/1
+            mode: active
+          - member: Ethernet0/2
+            mode: active
+        state: merged
+        
+#- name: Write memory
+#  hosts: all_devices
+#
+#  tasks:
+#    - name: Write memory
+#      cisco.ios.ios_command:
+#        commands: "write memory"

@@ -1,0 +1,20 @@
+---
+
+config:
+  vlans:
+    vlan:
+      - name: "USERS"
+        vlan_id: "40"
+  interfaces:
+    access:
+      - name: Ethernet0/2
+        alias: "USERS"
+        interface_mode: access
+        vlan:
+          members: "40"
+    trunk:
+      - name: Ethernet0/1
+        alias: "TO_AZOV-R"
+        interface_mode: trunk
+        allowed_vlans:
+          members: 40

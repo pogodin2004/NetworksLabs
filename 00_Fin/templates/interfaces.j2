@@ -12,4 +12,16 @@ interface Ethernet{{ port }}
  ip address {{ value.address }} {{ value.mask }}
 {% endfor %}
 {% endif %}
- 
+
+{% if subinterface is defined %}
+{% for port, value in subinterface.items() %}
+interface Ethernet{{ port }}.{{ value.vlan }}
+{% if 'alias' in value %}
+ description {{ value.alias }}
+{% endif %}
+ encapsulation dot1q {{ value.dot1q }}
+ ip address {{ value.address }} {{ value.mask }}
+interface Ethernet{{ port }}
+ no shutdown
+{% endfor %}
+{% endif %}

@@ -10,6 +10,14 @@ interfaces:
     address: 10.10.131.9
     mask: 255.255.255.252
 
+subinterface:
+  0/2:
+    vlan: 40
+    alias: USERS
+    address: 172.18.40.1
+    mask: 255.255.255.0
+    dot1q: 40
+
 bgp:
   asn: 201
   neighbor:
@@ -17,5 +25,6 @@ bgp:
 
   networks:
     - {network: 10.10.131.8, mask: 255.255.255.252}
+    - {network: 172.18.40.0, mask: 255.255.255.0}        
     - {network: 132.132.132.132, mask: 255.255.255.255}
 

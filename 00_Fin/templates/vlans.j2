@@ -1,0 +1,33 @@
+{% if config.vlans is defined %}
+{% for vlan in config.vlans.vlan %}
+vlan {{ vlan.vlan_id }}
+    {% if vlan.name is defined %}
+    name {{ vlan.name }}
+    {% endif %}
+{% endfor %}
+{% endif %}
+
+{% if config.interfaces.access is defined %}
+{% for interface in config.interfaces.access %}
+interface {{ interface.name }}
+    {% if interface.alias is defined %}
+    description {{ interface.alias }}
+    {% endif %}
+    switchport mode {{ interface.interface_mode }}
+    switchport access vlan {{ interface.vlan.members }}
+{% endfor %}
+{% endif %}
+
+{% if config.interfaces.trunk is defined %}
+{% for interface in config.interfaces.trunk %}
+interface {{ interface.name }}
+    {% if interface.alias is defined %}
+    description {{ interface.alias }}
+    {% endif %}
+    {% if interface.allowed_vlans.members is defined %}
+    switchport trunk allowed vlan {{ interface.allowed_vlans.members }}
+    {% endif %}
+    switchport trunk encapsulation dot1q
+    switchport mode trunk
+{% endfor %}
+{% endif %}

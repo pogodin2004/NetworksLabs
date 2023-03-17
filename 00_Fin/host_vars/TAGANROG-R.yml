@@ -9,6 +9,14 @@ interfaces:
     alias: TO_RSTV-R1
     address: 10.10.131.13
     mask: 255.255.255.252
+    
+subinterface:
+  0/2:
+    vlan: 50
+    alias: USERS
+    address: 172.18.50.1
+    mask: 255.255.255.0
+    dot1q: 50
 
 bgp:
   asn: 201
@@ -17,4 +25,5 @@ bgp:
 
   networks:
     - {network: 10.10.131.12, mask: 255.255.255.252}
+    - {network: 172.18.50.0, mask: 255.255.255.0}    
     - {network: 133.133.133.133, mask: 255.255.255.255}    
