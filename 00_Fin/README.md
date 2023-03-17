@@ -176,9 +176,9 @@ DC1#wr
 
    шаблоны:
 
-![](img/bgp_template_vlan_r.png)
+![](img/template_vlan_r.png)
 
-![](img/bgp_template_vlan_sw.png)   
+![](img/template_vlan_sw.png)   
 
 
 4. Добавляем в файлы с настройками маршрутизатора конфигурации BGP
