@@ -15,6 +15,11 @@ interfaces:
     address: 10.10.111.29
     mask: 255.255.255.252
     
+  1/0:
+    alias: TO_MSK-R
+    address: 10.10.111.37
+    mask: 255.255.255.252    
+    
 subinterface:
   0/3:
     vlan: 200
@@ -28,9 +33,11 @@ bgp:
   neighbor:
     - {address: 10.10.111.22, remote_as: 1001}
     - {address: 10.10.111.30, remote_as: 1001}
+    - {address: 10.10.111.38, remote_as: 1001}    
   networks:
     - {network: 10.10.111.20, mask: 255.255.255.252}
     - {network: 10.10.111.28, mask: 255.255.255.252}
+    - {network: 10.10.111.36, mask: 255.255.255.252}    
     - {network: 172.18.200.0, mask: 255.255.255.0}    
     - {network: 115.115.115.115, mask: 255.255.255.255}
 
