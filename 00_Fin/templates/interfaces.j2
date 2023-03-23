@@ -25,3 +25,14 @@ interface Ethernet{{ port }}
  no shutdown
 {% endfor %}
 {% endif %}
+
+{% if tunnel1 is defined %}
+interface Tunnel1
+ ip address {{ tunnel1.address }} {{ tunnel1.mask }}
+ no ip redirects
+ ip mtu 1400
+ ip tcp adjust-mss 1360
+ tunnel source Loopback0
+ tunnel mode gre multipoint
+ ip nhrp network-id 1 
+{% endif %}

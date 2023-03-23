@@ -17,6 +17,10 @@ subinterface:
     address: 172.18.10.1
     mask: 255.255.255.0
     dot1q: 10
+    
+tunnel1:
+  address: 10.0.0.1
+  mask: 255.255.255.0
  
 bgp:
   asn: 101
@@ -27,4 +31,6 @@ bgp:
     - {network: 10.10.121.8, mask: 255.255.255.252}
     - {network: 172.18.10.0, mask: 255.255.255.0}    
     - {network: 122.122.122.122, mask: 255.255.255.255}
+    
+
 
