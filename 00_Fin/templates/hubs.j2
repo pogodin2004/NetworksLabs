@@ -1,0 +1,6 @@
+{% if tunnel is defined %}
+{% for port, value in tunnel.items() %}
+interface Tunnel{{ port }}
+ ip nhrp map multicast dynamic
+{% endfor %} 
+{% endif %}

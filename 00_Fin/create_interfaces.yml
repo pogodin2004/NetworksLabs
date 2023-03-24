@@ -46,6 +46,38 @@
             mode: active
         state: merged
         
+- name: Crypto
+  hosts: hubs:spokes
+  
+  tasks:
+    - name: Deploy crypto config
+      cisco.ios.ios_config:
+        src: crypto.j2  
+
+- name: Hubs settings
+  hosts: hubs
+
+  tasks:      
+    - name: Hubs settings
+      cisco.ios.ios_config:
+        src: templates/hubs.j2
+        
+- name: Spokes settings
+  hosts: spokes
+
+  tasks:      
+    - name: Spokes settings
+      cisco.ios.ios_config:
+        src: templates/spokes.j2
+      
+- name: Route for spokes
+  hosts: spokes
+
+  tasks:      
+    - name: route for spokes
+      cisco.ios.ios_config:
+        src: templates/route_for_spokes.j2 
+        
 #- name: Write memory
 #  hosts: all_devices
 #

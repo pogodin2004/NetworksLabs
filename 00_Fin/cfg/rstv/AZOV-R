@@ -1,91 +1,187 @@
-AZOV-R#sh ip bgp sum
-BGP router identifier 132.132.132.132, local AS number 201
-BGP table version is 36, main routing table version 36
-34 network entries using 4896 bytes of memory
-35 path entries using 2940 bytes of memory
-5/5 BGP path/bestpath attribute entries using 800 bytes of memory
-3 BGP AS-PATH entries using 72 bytes of memory
-0 BGP route-map cache entries using 0 bytes of memory
-0 BGP filter-list cache entries using 0 bytes of memory
-BGP using 8708 total bytes of memory
-BGP activity 34/0 prefixes, 35/0 paths, scan interval 60 secs
+version 15.7
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname AZOV-R
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+!
+!
+!
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
 
-Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-10.10.131.10    4          201      56      51       36    0    0 00:43:10       32
-AZOV-R#
 
-
-AZOV-R#sh run | s bgp
+!
+!
+!
+!
+ip domain name pogodin.online
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+username admin privilege 15 secret 5 $1$V2aK$iwLzGDpCmMUzTigaypjvx/
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!         
+crypto isakmp policy 1
+ authentication pre-share
+crypto isakmp key DMVPNpass address 0.0.0.0        
+!
+!
+crypto ipsec transform-set AES128-SHA esp-aes esp-sha-hmac 
+ mode transport
+!
+crypto ipsec profile DMVPN-P
+ set transform-set AES128-SHA 
+!
+!
+!
+!
+!
+!
+!
+interface Loopback1
+ ip address 132.132.132.132 255.255.255.255
+!
+interface Loopback2
+ no ip address
+!         
+interface Tunnel1
+ ip address 10.0.0.4 255.255.255.0
+ no ip redirects
+ ip mtu 1400
+ ip nhrp map 10.0.0.100 114.114.114.114
+ ip nhrp map multicast 114.114.114.114
+ ip nhrp network-id 1
+ ip nhrp nhs 10.0.0.100
+ ip tcp adjust-mss 1360
+ tunnel source Loopback1
+ tunnel mode gre multipoint
+ tunnel protection ipsec profile DMVPN-P
+!
+interface Tunnel2
+ ip address 10.0.1.1 255.255.255.0
+ no ip redirects
+ ip mtu 1400
+ ip nhrp map 10.0.1.200 115.115.115.115
+ ip nhrp map multicast 115.115.115.115
+ ip nhrp network-id 2
+ ip nhrp nhs 10.0.1.200
+ ip tcp adjust-mss 1360
+ tunnel source Loopback2
+ tunnel mode gre multipoint
+ tunnel protection ipsec profile DMVPN-P
+!
+interface Ethernet0/0
+ description ANSIBLE_PORT
+ ip address 192.168.40.132 255.255.255.0
+ duplex auto
+!
+interface Ethernet0/1
+ description TO_RSTV-R1
+ ip address 10.10.131.9 255.255.255.252
+ duplex auto
+!
+interface Ethernet0/2
+ no ip address
+ duplex auto
+!
+interface Ethernet0/2.40
+ description USERS
+ encapsulation dot1Q 40
+ ip address 172.18.40.1 255.255.255.0
+!
+interface Ethernet0/3
+ no ip address
+ shutdown
+ duplex auto
+!
 router bgp 201
  bgp router-id 132.132.132.132
  bgp log-neighbor-changes
  neighbor 10.10.131.10 remote-as 201
  !
  address-family ipv4
+  network 10.0.0.0 mask 255.255.255.0
+  network 10.0.1.0 mask 255.255.255.0
   network 10.10.131.8 mask 255.255.255.252
   network 132.132.132.132 mask 255.255.255.255
   network 172.18.40.0 mask 255.255.255.0
+  network 232.232.232.232
   neighbor 10.10.131.10 activate
  exit-address-family
-AZOV-R#
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip route 172.18.100.0 255.255.255.0 Tunnel1
+ip route 172.18.200.0 255.255.255.0 Tunnel2
+ip ssh version 2
+!
+ipv6 ioam timestamp
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login local
+ transport input ssh
+!
+ntp server 34.202.215.187
+ntp server pool.ntp.org
+!
+end
 
-
-AZOV-R#sh ip bgp
-BGP table version is 36, local router ID is 132.132.132.132
-Status codes: s suppressed, d damped, h history, * valid, > best, i - internal, 
-              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter, 
-              x best-external, a additional-path, c RIB-compressed, 
-              t secondary path, 
-Origin codes: i - IGP, e - EGP, ? - incomplete
-RPKI validation codes: V valid, I invalid, N Not found
-
-     Network          Next Hop            Metric LocPrf Weight Path
- *>i  10.10.111.8/30   10.10.141.34             0    100      0 301 1001 i
- *>i  10.10.111.12/30  10.10.141.34             0    100      0 301 1001 i
- *>i  10.10.111.16/30  10.10.141.34             0    100      0 301 1001 i
- *>i  10.10.111.20/30  10.10.141.34             0    100      0 301 1001 i
- *>i  10.10.111.24/30  10.10.141.34             0    100      0 301 1001 i
- *>i  10.10.111.28/30  10.10.141.34             0    100      0 301 1001 i
- *>i  10.10.121.8/30   10.10.141.22             0    100      0 301 101 i
- *>i  10.10.121.12/30  10.10.141.22             0    100      0 301 101 i
- *>i  10.10.121.16/30  10.10.141.22             0    100      0 301 101 i
- * i  10.10.131.8/30   10.10.131.10             0    100      0 i
- *>                    0.0.0.0                  0         32768 i
- *>i  10.10.131.12/30  10.10.131.10             0    100      0 i
- *>i  10.10.131.16/30  10.10.131.10             0    100      0 i
-     Network          Next Hop            Metric LocPrf Weight Path
- *>i  10.10.141.8/30   10.10.141.22             0    100      0 301 i
- *>i  10.10.141.12/30  10.10.141.34             0    100      0 301 i
- *>i  10.10.141.16/30  10.10.141.22             0    100      0 301 i
- *>i  10.10.141.20/30  10.10.131.10             0    100      0 i
- *>i  10.10.141.24/30  10.10.141.22             0    100      0 301 i
- *>i  10.10.141.28/30  10.10.141.34             0    100      0 301 i
- *>i  10.10.141.32/30  10.10.131.10             0    100      0 i
- *>i  111.111.111.111/32
-                       10.10.141.34             0    100      0 301 1001 i
- *>i  112.112.112.112/32
-                       10.10.141.34             0    100      0 301 1001 i
- *>i  113.113.113.113/32
-                       10.10.141.34             0    100      0 301 1001 i
- *>i  121.121.121.121/32
-                       10.10.141.22             0    100      0 301 101 i
- *>i  122.122.122.122/32
-                       10.10.141.22             0    100      0 301 101 i
- *>i  123.123.123.123/32
-                       10.10.141.22             0    100      0 301 101 i
- *>i  124.124.124.124/32
-                       10.10.141.22             0    100      0 301 101 i
- *>i  131.131.131.131/32
-     Network          Next Hop            Metric LocPrf Weight Path
-                       10.10.131.10             0    100      0 i
- *>   132.132.132.132/32
-                       0.0.0.0                  0         32768 i
- *>i  141.141.141.141/32
-                       10.10.141.22             0    100      0 301 i
- *>i  142.142.142.142/32
-                       10.10.141.34             0    100      0 301 i
- *>i  172.18.10.0/24   10.10.141.22             0    100      0 301 101 i
- *>i  172.18.20.0/24   10.10.141.22             0    100      0 301 101 i
- *>i  172.18.30.0/24   10.10.141.22             0    100      0 301 101 i
- *>   172.18.40.0/24   0.0.0.0                  0         32768 i
-AZOV-R#  

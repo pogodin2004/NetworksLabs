@@ -1,8 +1,13 @@
 ---
 
 loopback:
-  address: 123.123.123.123
-  mask: 255.255.255.255
+  1:
+    address: 123.123.123.123
+    mask: 255.255.255.255
+    
+  2:
+    address: 223.223.223.223
+    mask: 255.255.255.255    
 
 interfaces:
   0/1:
@@ -18,16 +23,38 @@ subinterface:
     mask: 255.255.255.0
     dot1q: 20
     
-tunnel1:
-  address: 10.0.0.2
-  mask: 255.255.255.0
-
+tunnel:
+  1:
+    address: 10.0.0.2
+    mask: 255.255.255.0
+    
+  2:
+    address: 10.0.1.2
+    mask: 255.255.255.0
+  
+nhrp:
+  1:
+    map: 10.0.0.100 114.114.114.114
+    multicast: 114.114.114.114
+    nhs: 10.0.0.100
+    registration: no-unique
+  
+  2:
+    map: 10.0.1.200 115.115.115.115
+    multicast: 115.115.115.115
+    nhs: 10.0.1.200
+    registration: no-unique
+ 
 bgp:
   asn: 101
+  id: 123.123.123.123
   neighbor:
     - {address: 10.10.121.14, remote_as: 101}
 
   networks:
     - {network: 10.10.121.12, mask: 255.255.255.252}
-    - {network: 172.18.20.0, mask: 255.255.255.0}    
-    - {network: 123.123.123.123, mask: 255.255.255.255}    
+    - {network: 172.18.20.0, mask: 255.255.255.0}
+    - {network: 10.0.0.0, mask: 255.255.255.0}
+    - {network: 10.0.1.0, mask: 255.255.255.0}                            
+    - {network: 123.123.123.123, mask: 255.255.255.255}
+    - {network: 223.223.223.223, mask: 255.255.255.255}            

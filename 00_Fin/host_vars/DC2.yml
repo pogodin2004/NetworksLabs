@@ -1,8 +1,9 @@
 ---
 
 loopback:
-  address: 115.115.115.115
-  mask: 255.255.255.255
+  2:
+    address: 115.115.115.115
+    mask: 255.255.255.255
 
 interfaces:
   0/1:
@@ -28,12 +29,14 @@ subinterface:
     mask: 255.255.255.0
     dot1q: 200
     
-tunnel1:
-  address: 10.0.0.200
-  mask: 255.255.255.0 
+tunnel:
+  2:
+    address: 10.0.1.200
+    mask: 255.255.255.0 
     
 bgp:
   asn: 1001
+  id: 115.115.115.115
   neighbor:
     - {address: 10.10.111.22, remote_as: 1001}
     - {address: 10.10.111.30, remote_as: 1001}
@@ -42,6 +45,7 @@ bgp:
     - {network: 10.10.111.20, mask: 255.255.255.252}
     - {network: 10.10.111.28, mask: 255.255.255.252}
     - {network: 10.10.111.36, mask: 255.255.255.252}    
-    - {network: 172.18.200.0, mask: 255.255.255.0}    
+    - {network: 172.18.200.0, mask: 255.255.255.0}
+    - {network: 10.0.1.0, mask: 255.255.255.0}     
     - {network: 115.115.115.115, mask: 255.255.255.255}
 

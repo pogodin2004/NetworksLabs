@@ -1,25 +1,119 @@
-RSTV-R1#sh ip bgp sum
-BGP router identifier 131.131.131.131, local AS number 201
-BGP table version is 40, main routing table version 40
-38 network entries using 5472 bytes of memory
-71 path entries using 5964 bytes of memory
-6/5 BGP path/bestpath attribute entries using 960 bytes of memory
-3 BGP AS-PATH entries using 72 bytes of memory
-0 BGP route-map cache entries using 0 bytes of memory
-0 BGP filter-list cache entries using 0 bytes of memory
-BGP using 12468 total bytes of memory
-BGP activity 38/0 prefixes, 71/0 paths, scan interval 60 secs
+version 15.7
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname RSTV-R1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+!
+!
+!
+mmi polling-interval 60
+no mmi auto-configure
+no mmi pvc
+mmi snmp-timeout 180
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
 
-Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-10.10.131.9     4          201      49      55       40    0    0 00:41:46        3
-10.10.131.13    4          201      50      54       40    0    0 00:41:46        3
-10.10.131.17    4          201      50      55       40    0    0 00:41:46        3
-10.10.141.22    4          301      58      55       40    0    0 00:41:41       28
-10.10.141.34    4          301      59      56       40    0    0 00:41:37       28
-RSTV-R1#
 
-
-RSTV-R1#sh run | s bgp
+!
+!
+!
+!
+ip domain name pogodin.online
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+username admin privilege 15 secret 5 $1$6APN$zoLGrhxVaFsqi7166tawk1
+!
+redundancy
+!
+!
+! 
+!
+!
+!
+!         
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback1
+ ip address 131.131.131.131 255.255.255.255
+!
+interface Ethernet0/0
+ description ANSIBLE_PORT
+ ip address 192.168.40.131 255.255.255.0
+ duplex auto
+!
+interface Ethernet0/1
+ description TO_REG-ISP1
+ ip address 10.10.141.21 255.255.255.252
+ duplex auto
+!
+interface Ethernet0/2
+ description TO_REG-ISP2
+ ip address 10.10.141.33 255.255.255.252
+ duplex auto
+!
+interface Ethernet0/3
+ description TO_AZOV-R
+ ip address 10.10.131.10 255.255.255.252
+ duplex auto
+!
+interface Ethernet1/0
+ description TO_TAGANROG-R
+ ip address 10.10.131.14 255.255.255.252
+ duplex auto
+!
+interface Ethernet1/1
+ description TO_NVCHRKSK-R
+ ip address 10.10.131.18 255.255.255.252
+ duplex auto
+!
+interface Ethernet1/2
+ no ip address
+ shutdown
+ duplex auto
+!         
+interface Ethernet1/3
+ no ip address
+ shutdown
+ duplex auto
+!
 router bgp 201
  bgp router-id 131.131.131.131
  bgp log-neighbor-changes
@@ -42,102 +136,36 @@ router bgp 201
   neighbor 10.10.141.22 activate
   neighbor 10.10.141.34 activate
  exit-address-family
-RSTV-R1#sh ip bgp
-BGP table version is 40, local router ID is 131.131.131.131
-Status codes: s suppressed, d damped, h history, * valid, > best, i - internal, 
-              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter, 
-              x best-external, a additional-path, c RIB-compressed, 
-              t secondary path, 
-Origin codes: i - IGP, e - EGP, ? - incomplete
-RPKI validation codes: V valid, I invalid, N Not found
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+ip ssh version 2
+!
+ipv6 ioam timestamp
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!         
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login local
+ transport input ssh
+!
+ntp server 34.208.249.133
+ntp server pool.ntp.org
+!
+end
 
-     Network          Next Hop            Metric LocPrf Weight Path
- *    10.10.111.8/30   10.10.141.22                           0 301 1001 i
- *>                    10.10.141.34                           0 301 1001 i
- *    10.10.111.12/30  10.10.141.22                           0 301 1001 i
- *>                    10.10.141.34                           0 301 1001 i
- *    10.10.111.16/30  10.10.141.22                           0 301 1001 i
- *>                    10.10.141.34                           0 301 1001 i
- *    10.10.111.20/30  10.10.141.22                           0 301 1001 i
- *>                    10.10.141.34                           0 301 1001 i
- *    10.10.111.24/30  10.10.141.22                           0 301 1001 i
- *>                    10.10.141.34                           0 301 1001 i
- *    10.10.111.28/30  10.10.141.22                           0 301 1001 i
- *>                    10.10.141.34                           0 301 1001 i
- *    10.10.121.8/30   10.10.141.34                           0 301 101 i
-     Network          Next Hop            Metric LocPrf Weight Path
- *>                    10.10.141.22                           0 301 101 i
- *    10.10.121.12/30  10.10.141.34                           0 301 101 i
- *>                    10.10.141.22                           0 301 101 i
- *    10.10.121.16/30  10.10.141.34                           0 301 101 i
- *>                    10.10.141.22                           0 301 101 i
- * i  10.10.131.8/30   10.10.131.9              0    100      0 i
- *>                    0.0.0.0                  0         32768 i
- * i  10.10.131.12/30  10.10.131.13             0    100      0 i
- *>                    0.0.0.0                  0         32768 i
- * i  10.10.131.16/30  10.10.131.17             0    100      0 i
- *>                    0.0.0.0                  0         32768 i
- *    10.10.141.8/30   10.10.141.34                           0 301 i
- *>                    10.10.141.22             0             0 301 i
- *    10.10.141.12/30  10.10.141.22                           0 301 i
- *>                    10.10.141.34             0             0 301 i
- *    10.10.141.16/30  10.10.141.34                           0 301 i
- *>                    10.10.141.22             0             0 301 i
- *    10.10.141.20/30  10.10.141.34                           0 301 i
- *                     10.10.141.22             0             0 301 i
- *>                    0.0.0.0                  0         32768 i
- *    10.10.141.24/30  10.10.141.34             0             0 301 i
- *>                    10.10.141.22             0             0 301 i
-     Network          Next Hop            Metric LocPrf Weight Path
- *>   10.10.141.28/30  10.10.141.34             0             0 301 i
- *                     10.10.141.22                           0 301 i
- *    10.10.141.32/30  10.10.141.22                           0 301 i
- *                     10.10.141.34             0             0 301 i
- *>                    0.0.0.0                  0         32768 i
- *    111.111.111.111/32
-                       10.10.141.22                           0 301 1001 i
- *>                    10.10.141.34                           0 301 1001 i
- *    112.112.112.112/32
-                       10.10.141.22                           0 301 1001 i
- *>                    10.10.141.34                           0 301 1001 i
- *    113.113.113.113/32
-                       10.10.141.22                           0 301 1001 i
- *>                    10.10.141.34                           0 301 1001 i
- *    121.121.121.121/32
-                       10.10.141.34                           0 301 101 i
- *>                    10.10.141.22                           0 301 101 i
- *    122.122.122.122/32
-                       10.10.141.34                           0 301 101 i
- *>                    10.10.141.22                           0 301 101 i
- *    123.123.123.123/32
-                       10.10.141.34                           0 301 101 i
-     Network          Next Hop            Metric LocPrf Weight Path
- *>                    10.10.141.22                           0 301 101 i
- *    124.124.124.124/32
-                       10.10.141.34                           0 301 101 i
- *>                    10.10.141.22                           0 301 101 i
- *>   131.131.131.131/32
-                       0.0.0.0                  0         32768 i
- *>i  132.132.132.132/32
-                       10.10.131.9              0    100      0 i
- *>i  133.133.133.133/32
-                       10.10.131.13             0    100      0 i
- *>i  134.134.134.134/32
-                       10.10.131.17             0    100      0 i
- *    141.141.141.141/32
-                       10.10.141.34                           0 301 i
- *>                    10.10.141.22             0             0 301 i
- *    142.142.142.142/32
-                       10.10.141.22                           0 301 i
- *>                    10.10.141.34             0             0 301 i
- *    172.18.10.0/24   10.10.141.34                           0 301 101 i
- *>                    10.10.141.22                           0 301 101 i
- *    172.18.20.0/24   10.10.141.34                           0 301 101 i
- *>                    10.10.141.22                           0 301 101 i
-     Network          Next Hop            Metric LocPrf Weight Path
- *    172.18.30.0/24   10.10.141.34                           0 301 101 i
- *>                    10.10.141.22                           0 301 101 i
- *>i  172.18.40.0/24   10.10.131.9              0    100      0 i
- *>i  172.18.50.0/24   10.10.131.13             0    100      0 i
- *>i  172.18.60.0/24   10.10.131.17             0    100      0 i
-RSTV-R1#

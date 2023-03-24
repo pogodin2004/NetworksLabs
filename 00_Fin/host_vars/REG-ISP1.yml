@@ -1,8 +1,9 @@
 ---
 
 loopback:
-  address: 141.141.141.141
-  mask: 255.255.255.255
+  1:
+    address: 141.141.141.141
+    mask: 255.255.255.255
   
 interfaces:
   0/1:
@@ -27,6 +28,7 @@ interfaces:
     
 bgp:
   asn: 301
+  id: 141.141.141.141
   neighbor:
     - {address: 10.10.141.17, remote_as: 101}
     - {address: 10.10.141.21, remote_as: 201}

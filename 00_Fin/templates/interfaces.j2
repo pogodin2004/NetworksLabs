@@ -1,6 +1,8 @@
 {% if loopback is defined %}
-interface Loopback0
- ip address {{ loopback.address }} {{ loopback.mask }}
+{% for port, value in loopback.items() %}
+interface Loopback{{ port }}
+ ip address {{ value.address }} {{ value.mask }}
+{% endfor %}
 {% endif %}
 
 {% if interfaces is defined %}
@@ -26,13 +28,16 @@ interface Ethernet{{ port }}
 {% endfor %}
 {% endif %}
 
-{% if tunnel1 is defined %}
-interface Tunnel1
- ip address {{ tunnel1.address }} {{ tunnel1.mask }}
+{% if tunnel is defined %}
+{% for port, value in tunnel.items() %}
+interface Tunnel{{ port }}
+ ip address {{ value.address }} {{ value.mask }}
  no ip redirects
  ip mtu 1400
  ip tcp adjust-mss 1360
- tunnel source Loopback0
+ tunnel source Loopback{{ port }}
  tunnel mode gre multipoint
- ip nhrp network-id 1 
+ ip nhrp network-id {{ port }}
+ tunnel protection ipsec profile DMVPN-P
+{% endfor %}
 {% endif %}

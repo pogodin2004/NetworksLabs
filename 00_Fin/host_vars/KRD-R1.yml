@@ -1,8 +1,9 @@
 ---
 
 loopback:
-  address: 121.121.121.121
-  mask: 255.255.255.255
+  1:
+    address: 121.121.121.121
+    mask: 255.255.255.255
 
 interfaces:
   0/1:
@@ -32,6 +33,7 @@ interfaces:
     
 bgp:
   asn: 101
+  id: 121.121.121.121
   neighbor:
     - {address: 10.10.141.18, remote_as: 301}
     - {address: 10.10.141.30, remote_as: 301}

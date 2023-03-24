@@ -1,0 +1,7 @@
+crypto isakmp policy 1
+ authentication pre-share
+crypto isakmp key DMVPNpass address 0.0.0.0 0.0.0.0
+crypto ipsec transform-set AES128-SHA esp-aes esp-sha-hmac
+ mode transport
+ crypto ipsec profile DMVPN-P
+ set transform-set AES128-SHA

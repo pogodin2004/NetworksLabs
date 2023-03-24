@@ -1,0 +1,9 @@
+{% if nhrp is defined %}
+{% for port, value in nhrp.items() %}
+interface Tunnel{{ port }}
+ ip nhrp map {{ value.map }}
+ ip nhrp map multicast {{ value.multicast }}
+ ip nhrp nhs {{ value.nhs }}
+ ip nhrp registration {{ value.registration }}
+{% endfor %}
+{% endif %}
